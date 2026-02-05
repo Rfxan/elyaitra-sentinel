@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+// haha
 const CommunitySection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
