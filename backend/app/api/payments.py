@@ -37,7 +37,7 @@ class PaymentRequest(BaseModel):
 # -------------------------
 @router.post("/create-order")
 def create_order():
-    amount_rupees = 29.01
+    amount_rupees = 1
     amount_paise = amount_rupees * 100
 
     order = client.order.create({

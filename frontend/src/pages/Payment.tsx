@@ -97,7 +97,7 @@ const Payment = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user_id: Number(localStorage.getItem("user_id")),
-              amount: 29.01,
+              amount: 1,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
@@ -149,7 +149,7 @@ const Payment = () => {
 
         {/* Price */}
         <div className="mb-6">
-          <span className="text-5xl font-extrabold text-white">₹29.01</span>
+          <span className="text-5xl font-extrabold text-white">₹1</span>
           <p className="text-sm text-muted-foreground mt-1">
             Pay once • Lifetime access
           </p>
