@@ -9,6 +9,23 @@ __pycache__/
 *.sqlite
 *.sqlite3
 
+# ---------- Backend Security ----------
+backend/.env*
+backend/*.log
+backend/logs/
+backend/chroma/
+backend/app/__pycache__/
+backend/app/ai_engine/__pycache__/
+backend/app/api/__pycache__/
+backend/app/core/__pycache__/
+backend/app/db/__pycache__/
+backend/app/models/__pycache__/
+backend/app/schemas/__pycache__/
+backend/app/services/__pycache__/
+backend/app/utils/__pycache__/
+backend/scripts/__pycache__/
+backend/static/__pycache__/
+
 # ---------- Frontend ----------
 frontend/node_modules/
 frontend/dist/
@@ -16,5 +33,13 @@ frontend/.env
 
 # ---------- General ----------
 .env
+.env.local
+.env.production
+.env.development
 .DS_Store
 *.log
+*.tmp
+*.swp
+*.bak
+secrets/
+keys/

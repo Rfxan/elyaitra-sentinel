@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from app.ai_engine.chroma_client import get_collection
 
@@ -59,7 +59,7 @@ splitter = RecursiveCharacterTextSplitter(
 def embed(text: str) -> list[float]:
     print("🧠 Embedding chunk...")
     result = genai.embed_content(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         content=text
     )
     return result["embedding"]

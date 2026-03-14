@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-3.1-flash-lite-preview")
 
 def generate_flashcards(docs: list[str]) -> list[dict]:
     if not docs:

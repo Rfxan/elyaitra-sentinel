@@ -13,7 +13,7 @@ genai.configure(api_key=API_KEY)
 
 class GeminiClient:
     def __init__(self):
-        # ✅ Gemini 2.5 Flash (fast + cheap + available)
+        # ✅ Latest Gemini Flash model (2.5 Flash)
         self.model = genai.GenerativeModel("models/gemini-2.5-flash")
 
     def generate(self, prompt: str) -> str:

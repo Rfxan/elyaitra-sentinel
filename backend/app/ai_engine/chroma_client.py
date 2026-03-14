@@ -14,6 +14,7 @@ DEFAULT_CHROMA_PATH = os.path.join(BASE_DIR, "storage")
 CHROMA_PATH = os.getenv("CHROMA_PATH", DEFAULT_CHROMA_PATH)
 
 # Ensure directory exists
+print(f"📂 CHROMA_PATH IN USE: {CHROMA_PATH}")
 os.makedirs(CHROMA_PATH, exist_ok=True)
 
 _client = None

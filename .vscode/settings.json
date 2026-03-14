@@ -1,0 +1,6 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "pip": true,
+        "/home/eubuntu/Documents/elyaitra/backend/venv/bin/python": true
+    }
+}

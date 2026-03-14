@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import.meta.env.DEV
 declare global {
   interface Window {
     Razorpay: any;
@@ -69,6 +70,29 @@ const Payment = () => {
 
   // Handle payment
   const handlePayment = async () => {
+    const userId = Number(localStorage.getItem("user_id"));
+
+    // DEV MODE BYPASS
+    if (import.meta.env.DEV) {
+      try {
+        await fetch(`${API_URL}/payments/record`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: userId,
+            amount: 1,
+          }),
+        });
+
+        navigate("/subjects", { replace: true });
+        return;
+      } catch {
+        setError("Dev payment failed.");
+        return;
+      }
+    }
+
+    // NORMAL RAZORPAY FLOW
     if (!razorpayReady) {
       setError("Payment system is still loading. Please wait.");
       return;
@@ -96,7 +120,7 @@ const Payment = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              user_id: Number(localStorage.getItem("user_id")),
+              user_id: userId,
               amount: 1,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,

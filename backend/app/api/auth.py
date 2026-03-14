@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-
+import hashlib
 from app.db.database import get_db
 from app.models.user import User
 
@@ -15,10 +15,12 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:
+    password = hashlib.sha256(password.encode()).hexdigest()
     return pwd_context.hash(password)
 
 
 def verify_password(password: str, hashed_password: str) -> bool:
+    password = hashlib.sha256(password.encode()).hexdigest()
     return pwd_context.verify(password, hashed_password)
 
 
@@ -28,7 +30,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 class SignupRequest(BaseModel):
     full_name: str
     email: EmailStr
-    password: str
+    password: constr(min_length=8, max_length=128)
 
 
 class LoginRequest(BaseModel):

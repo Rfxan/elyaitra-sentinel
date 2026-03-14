@@ -8,7 +8,9 @@ from backend.app.ai_engine.chroma_client import get_collection
 # --------------------------------------------------
 # ENV
 # --------------------------------------------------
-load_dotenv()
+from pathlib import Path
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
@@ -78,6 +80,7 @@ def ingest():
                 continue
 
             # -------- SPLIT INTO CHUNKS --------
+            unit = file.replace("unit", "").replace(".txt", "")
             chunks = splitter.split_text(text)
             print(f"        🔹 {len(chunks)} chunks extracted")
 
@@ -93,7 +96,7 @@ def ingest():
                 )
 
                 response = genai.embed_content(
-                    model="models/text-embedding-004",
+                    model="models/gemini-embedding-001",
                     content=batch
                 )
                 embeddings = response["embedding"]
@@ -103,8 +106,9 @@ def ingest():
                     embeddings=embeddings,
                     metadatas=[{
                         "subject": subject,
+                        "unit": unit,
                         "source": file
-                    }] * len(batch),
+                    } for _ in range(len(batch))],
                     ids=[f"{subject}_{doc_id + i}" for i in range(len(batch))]
                 )
 

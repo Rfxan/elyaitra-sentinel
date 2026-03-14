@@ -26,6 +26,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
+        "http://localhost:8080",
         "https://elyaitra-vite.vercel.app",
         "https://elyaitra.com",
         "https://www.elyaitra.com",

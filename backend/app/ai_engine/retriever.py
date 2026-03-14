@@ -14,7 +14,7 @@ genai.configure(api_key=API_KEY)
 
 def embed(text: str) -> list[float]:
     result = genai.embed_content(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         content=text
     )
     return result["embedding"]
@@ -28,11 +28,18 @@ def retrieve(question: str, subject: str, unit: int | None = None, k: int = 5):
         print("   question=", question)
 
         collection = get_collection(subject)
+        print(f"📊 Collection {subject} count: {collection.count()}")
+        
+        emb = embed(question)
+        print(f"🧠 Generated embedding length: {len(emb)}")
+        
+        where_clause = {"unit": str(unit)} if unit else {}
+        print(f"🔎 Querying with where={where_clause}")
 
         results = collection.query(
-            query_embeddings=[embed(question)],
+            query_embeddings=[emb],
             n_results=k,
-            where={"unit": str(unit)}  # MUST be string
+            where=where_clause
         )
 
         print("📦 RAW CHROMA RESULTS:")

@@ -12,6 +12,11 @@ from app.models.payment import Payment
 router = APIRouter(prefix="/payments", tags=["payments"])
 
 # -------------------------
+# DEV MODE
+# -------------------------
+DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
+
+# -------------------------
 # Razorpay client
 # -------------------------
 client = razorpay.Client(
@@ -27,9 +32,9 @@ client = razorpay.Client(
 class PaymentRequest(BaseModel):
     user_id: int
     amount: int
-    razorpay_payment_id: str
-    razorpay_order_id: str
-    razorpay_signature: str
+    razorpay_payment_id: str | None = None
+    razorpay_order_id: str | None = None
+    razorpay_signature: str | None = None
 
 
 # -------------------------
@@ -37,6 +42,15 @@ class PaymentRequest(BaseModel):
 # -------------------------
 @router.post("/create-order")
 def create_order():
+
+    if DEV_MODE:
+        return {
+            "id": "dev_order",
+            "amount": 100,
+            "currency": "INR",
+            "dev_mode": True
+        }
+
     amount_rupees = 1
     amount_paise = amount_rupees * 100
 
@@ -47,6 +61,27 @@ def create_order():
     })
 
     return order
+# def create_order():
+
+#     # DEV MODE → fake order
+#     if DEV_MODE:
+#         return {
+#             "id": "dev_order_123",
+#             "amount": 100,
+#             "currency": "INR",
+#             "status": "created"
+#         }
+
+#     amount_rupees = 1
+#     amount_paise = amount_rupees * 100
+
+#     order = client.order.create({
+#         "amount": amount_paise,
+#         "currency": "INR",
+#         "payment_capture": True
+#     })
+
+#     return order
 
 
 # -------------------------
@@ -57,7 +92,41 @@ def record_payment(
     data: PaymentRequest,
     db: Session = Depends(get_db)
 ):
-    # 🔐 Verify Razorpay signature
+
+    # -------------------------
+    # DEV MODE → bypass payment
+    # -------------------------
+    if DEV_MODE:
+
+        already_paid = (
+            db.query(Payment)
+            .filter(
+                Payment.user_id == data.user_id,
+                Payment.status == "success"
+            )
+            .first()
+        )
+
+        if already_paid:
+            return {"status": "success", "message": "Already paid (DEV MODE)"}
+
+        payment = Payment(
+            user_id=data.user_id,
+            amount=data.amount,
+            status="success"
+        )
+
+        db.add(payment)
+        db.commit()
+
+        return {
+            "status": "success",
+            "message": "Payment bypassed in DEV_MODE"
+        }
+
+    # -------------------------
+    # Production verification
+    # -------------------------
     message = f"{data.razorpay_order_id}|{data.razorpay_payment_id}"
     secret = os.getenv("RAZORPAY_KEY_SECRET")
 
@@ -70,7 +139,9 @@ def record_payment(
     if generated_signature != data.razorpay_signature:
         raise HTTPException(status_code=400, detail="Invalid signature")
 
-    # ✅ Check if user already paid
+    # -------------------------
+    # Check if already paid
+    # -------------------------
     already_paid = (
         db.query(Payment)
         .filter(
@@ -83,7 +154,6 @@ def record_payment(
     if already_paid:
         return {"status": "success", "message": "Already paid"}
 
-    # ✅ Insert payment
     payment = Payment(
         user_id=data.user_id,
         amount=data.amount,
