@@ -1,12 +1,6 @@
-import os
-from dotenv import load_dotenv
-import google.generativeai as genai
+from app.ai_engine.providers import get_provider
 
-load_dotenv()
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel("gemini-3.1-flash-lite-preview")
+provider = get_provider()
 
 
 def generate_flashcards(docs: list[str]) -> list[dict]:
@@ -32,8 +26,7 @@ Syllabus:
 """
 
     try:
-        response = model.generate_content(prompt)
-        text = response.text or ""
+        text = provider.generate(prompt)
 
         flashcards = []
         q = None

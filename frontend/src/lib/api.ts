@@ -17,8 +17,19 @@ export async function apiFetch(
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || "API Error");
+    let errorMessage = "API Error";
+    try {
+      const errorJson = JSON.parse(text);
+      errorMessage = errorJson.detail || errorJson.message || text;
+    } catch {
+      errorMessage = text || `Error: ${res.status} ${res.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
 
-  return res.json();
+  const contentType = res.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return res.json();
+  }
+  return res.text();
 }

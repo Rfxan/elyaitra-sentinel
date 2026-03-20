@@ -1,8 +1,8 @@
 import os
 from app.ai_engine.retriever import retrieve
-from app.ai_engine.llm_client import GeminiClient
+from app.ai_engine.providers import get_provider
 
-llm = GeminiClient()
+llm = get_provider()
 
 # --------------------------------------------------
 # Load rules from chat.txt (SYSTEM PROMPT)

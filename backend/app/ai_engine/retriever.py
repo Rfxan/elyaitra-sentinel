@@ -1,57 +1,126 @@
-import os
-from dotenv import load_dotenv
-import google.generativeai as genai
+from rank_bm25 import BM25Okapi
 from app.ai_engine.chroma_client import get_collection
+from app.ai_engine.providers import get_provider
+from app.ai_engine import config
+from flashrank import Ranker, RerankRequest
 
-load_dotenv()
+provider = get_provider()
+_ranker = None
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
-    raise RuntimeError("GEMINI_API_KEY not set")
-
-genai.configure(api_key=API_KEY)
-
+def get_ranker():
+    global _ranker
+    if _ranker is None:
+        _ranker = Ranker(model_name="ms-marco-MiniLM-L-12-v2", cache_dir="/tmp/flashrank_cache")
+    return _ranker
 
 def embed(text: str) -> list[float]:
-    result = genai.embed_content(
-        model="models/gemini-embedding-001",
-        content=text
-    )
-    return result["embedding"]
+    return provider.embed(text)
 
+def _expand_query(question: str) -> list[str]:
+    """Use LLM to generate 3 variations of the question for better retrieval."""
+    if not config.QUERY_EXPANSION_ENABLED:
+        return [question]
+    
+    prompt = f"""You are an AI assistant designed to improve search retrieval. 
+Given a question, generate 3 different versions of it that capture the same intent but use different phrasing, technical terms, or perspectives.
+Respond ONLY with the 3 variations, one per line. No headers, no numbers.
 
-def retrieve(question: str, subject: str, unit: int | None = None, k: int = 5):
+ORIGINAL QUESTION: {question}
+
+VARIATIONS:"""
+    
     try:
-        print("🔍 RETRIEVE CALLED WITH:")
-        print("   subject =", subject)
-        print("   unit    =", unit)
-        print("   question=", question)
+        response = provider.generate(prompt)
+        variations = [v.strip("- ").strip() for v in response.split("\n") if v.strip()]
+        # Filter out anything that looks like "Variations:" or the original question if returned as prefix
+        variations = [v for v in variations if v.lower() not in {"variations:", "original question:"}]
+        
+        # Keep original + top 3 variations
+        all_queries = [question] + variations[:3]
+        print(f"🔄 QUERY EXPANSION | Original: '{question}' -> Variations: {all_queries[1:]}")
+        return all_queries
+    except Exception as e:
+        print(f"⚠️ Query expansion failed: {e}")
+        return [question]
 
+def tokenize(text: str) -> list[str]:
+    """Simple tokenizer for BM25."""
+    return text.lower().replace("-", " ").replace("+", " ").split()
+
+def retrieve(question: str, subject: str, unit: int | None = None, k: int | None = None):
+    try:
+        if k is None:
+            k = config.FINAL_RETRIEVAL_K
+            
+        initial_k = config.INITIAL_RETRIEVAL_K if config.RERANKER_ENABLED else k
+        
+        # 0. Query Expansion
+        queries = _expand_query(question) if config.QUERY_EXPANSION_ENABLED else [question]
+        
+        print(f"🔍 RETRIEVER | subject={subject} | queries={len(queries)} | k={k}")
         collection = get_collection(subject)
-        print(f"📊 Collection {subject} count: {collection.count()}")
+        emb_provider = provider
         
-        emb = embed(question)
-        print(f"🧠 Generated embedding length: {len(emb)}")
+        # Optimize Quote: Use embed_batch to get all embeddings in ONE request
+        all_embeddings = emb_provider.embed_batch(queries)
         
-        where_clause = {"unit": str(unit)} if unit else {}
-        print(f"🔎 Querying with where={where_clause}")
+        all_stage1_docs = []
+        seen_docs = set()
 
-        results = collection.query(
-            query_embeddings=[emb],
-            n_results=k,
-            where=where_clause
-        )
+        for i, q in enumerate(queries):
+            # 1. Vector Search (Semantic)
+            emb = all_embeddings[i]
+            where_clause = {"unit": str(unit)} if unit else None
+            
+            vector_results = collection.query(
+                query_embeddings=[emb],
+                n_results=initial_k,
+                where=where_clause
+            )
+            
+            vector_docs = vector_results.get("documents", [[]])[0]
+            vector_ids = vector_results.get("ids", [[]])[0]
 
-        print("📦 RAW CHROMA RESULTS:")
-        print(results)
+            # 2. Keyword Search (BM25) - Only if enabled and we have unit docs
+            # (Note: BM25 on all queries might be slow, so we optimize)
+            current_unit_docs = []
+            if config.HYBRID_RETRIEVAL:
+                all_unit_data = collection.get(where=where_clause)
+                u_ids = all_unit_data.get("ids", [])
+                u_docs = all_unit_data.get("documents", [])
+                
+                if u_docs:
+                    tokenized_corpus = [tokenize(doc) for doc in u_docs]
+                    bm25 = BM25Okapi(tokenized_corpus)
+                    query_tokens = tokenize(q)
+                    bm25_scores = bm25.get_scores(query_tokens)
+                    bm25_ranked_indices = sorted(range(len(bm25_scores)), key=lambda i: bm25_scores[i], reverse=True)
+                    current_unit_docs = [u_docs[i] for i in bm25_ranked_indices[:initial_k]]
 
-        docs = results.get("documents", [[]])[0]
+            # Combine and deduplicate
+            for doc in vector_docs + current_unit_docs:
+                if doc not in seen_docs:
+                    all_stage1_docs.append(doc)
+                    seen_docs.add(doc)
 
-        print("📄 DOC COUNT:", len(docs))
+        # 4. Reranking (Stage 2)
+        if config.RERANKER_ENABLED and len(all_stage1_docs) > k:
+            print(f"🔄 RERANKING | Pool: {len(all_stage1_docs)} chunks -> Target: {k}")
+            ranker = get_ranker()
+            passages = [{"id": i, "text": doc} for i, doc in enumerate(all_stage1_docs)]
+            rerankrequest = RerankRequest(query=question, passages=passages)
+            results = ranker.rerank(rerankrequest)
+            
+            final_docs = [r["text"] for r in results[:k]]
+        else:
+            final_docs = all_stage1_docs[:k]
 
-        return docs
+        print(f"📊 Final result: {len(final_docs)} chunks returned")
+        return final_docs
 
     except Exception as e:
-        print("❌ Retrieval error:", e)
+        print("❌ Hybrid Retrieval error:", e)
+        import traceback
+        traceback.print_exc()
         return []
 

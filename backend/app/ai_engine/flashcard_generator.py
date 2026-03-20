@@ -1,6 +1,6 @@
-import google.generativeai as genai
+from app.ai_engine.providers import get_provider
 
-model = genai.GenerativeModel("gemini-3.1-flash-lite-preview")
+provider = get_provider()
 
 def generate_flashcards(docs: list[str]) -> list[dict]:
     if not docs:
@@ -26,15 +26,15 @@ Syllabus content:
 """
 
     try:
-        response = model.generate_content(prompt)
+        response_text = provider.generate(prompt)
 
-        if not response or not response.text:
+        if not response_text:
             return []
 
         flashcards = []
         q = None
 
-        for line in response.text.splitlines():
+        for line in response_text.splitlines():
             line = line.strip()
             if line.startswith("Q:"):
                 q = line[2:].strip()

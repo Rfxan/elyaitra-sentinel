@@ -1,22 +1,20 @@
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
 from backend.app.ai_engine.chroma_client import get_collection
+from backend.app.ai_engine.providers import get_provider
+from pathlib import Path
 
 # --------------------------------------------------
 # ENV
 # --------------------------------------------------
-from pathlib import Path
 dotenv_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
-    raise RuntimeError("GEMINI_API_KEY not set")
-
-genai.configure(api_key=API_KEY)
+# --------------------------------------------------
+# LLM PROVIDER
+# --------------------------------------------------
+provider = get_provider()
 
 # --------------------------------------------------
 # PATHS
@@ -95,11 +93,7 @@ def ingest():
                     f"({len(batch)} chunks)"
                 )
 
-                response = genai.embed_content(
-                    model="models/gemini-embedding-001",
-                    content=batch
-                )
-                embeddings = response["embedding"]
+                embeddings = provider.embed_batch(batch)
 
                 collection.add(
                     documents=batch,

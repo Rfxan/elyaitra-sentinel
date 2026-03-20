@@ -1,7 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
+import os
+import warnings
+import asyncio
+import sys
+
+# Suppress google-generativeai FUTURE WARN which breaks uvicorn reload on Windows
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+# Fix Uvicorn reload crashing with KeyboardInterrupt/CancelledError on Windows Python 3.14
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 from app.api.health import router as health_router
 from app.api.auth import router as auth_router
 from app.api.payments import router as payments_router
@@ -14,7 +24,7 @@ from app.api.flashcards import router as flashcards_router
 from app.db.init_db import init_db
 
 # 🔥 TEMP DEBUG: IMPORT INGEST
-# from app.ai_engine.ingest import ingest
+from app.ai_engine.ingest import ingest
 
 app = FastAPI(title="Elyaitra Backend", version="0.1.0")
 
@@ -45,11 +55,11 @@ def startup_event():
     init_db()
 
     # 🔥🔥🔥 TEMP: FORCE INGEST FOR DEBUG
-    # print("🔥 CALLING INGEST FROM STARTUP 🔥")
-    # try:
-    #     ingest()
-    # except Exception as e:
-    #     print("❌ INGEST ERROR:", repr(e))
+    print("🔥 CALLING INGEST FROM STARTUP (OLLAMA MODE) 🔥")
+    try:
+        ingest()
+    except Exception as e:
+        print("❌ INGEST ERROR:", repr(e))
 
 # ---------------------------
 # ROUTERS

@@ -3,8 +3,9 @@
 from typing import List, Dict
 
 from app.ai_engine.retriever import retrieve
-from app.ai_engine.llm_client import GeminiClient
+from app.ai_engine.providers import get_provider
 import os
+
 def _load_prompt_file(filename: str) -> str:
     base_dir = os.path.dirname(os.path.abspath(__file__))  # ai_engine/
     prompt_path = os.path.join(base_dir, "prompts", filename)
@@ -15,14 +16,11 @@ def _load_prompt_file(filename: str) -> str:
     with open(prompt_path, "r", encoding="utf-8") as f:
         return f.read()
 
-
-
-ALLOWED_MODES = {"chat", "flowchart", "flashcard", "quiz"}
-
+ALLOWED_MODES = {"chat", "flowchart", "flashcard", "quiz", "audio"}
 
 class TutorEngine:
     def __init__(self):
-        self.llm = GeminiClient()
+        self.llm = get_provider()
 
     def respond(
         self,
@@ -68,18 +66,14 @@ class TutorEngine:
         # --------------------
         system_prompt = self._get_system_prompt(mode)
 
-        final_prompt = f"""
-{system_prompt}
+        final_prompt = f"""{system_prompt}
 
-SUBJECT: {subject}
-UNIT: {unit}
-TOPIC: {topic}
-MODE: {mode}
-
-APPROVED SYLLABUS CONTENT:
+---
+CONTEXT FROM YOUR SYLLABUS (TOPIC: {topic}, SUBJECT: {subject}):
 {syllabus_context}
 
-STUDENT INPUT:
+---
+STUDENT'S REQUEST:
 {message}
 """
 
@@ -126,6 +120,9 @@ STUDENT INPUT:
                 "Wait for student response.\n"
                 "Do not give answers unless evaluating.\n"
             )
+
+        if mode == "audio":
+            return _load_prompt_file("audio.txt")
 
         return ""
 

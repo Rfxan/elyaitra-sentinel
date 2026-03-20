@@ -55,8 +55,32 @@ Elyaitra:
 
 ### AI / Retrieval
 - 🔎 RAG (Retrieval Augmented Generation)
+- 📦 Multi-LLM Provider Support (Gemini & Ollama)
 - 📦 Embeddings for syllabus content
 - 🗂️ Chunked & indexed syllabus data
+
+---
+
+## ⚙️ AI Provider Configuration
+
+Elyaitra now supports switching between **Google Gemini** (default) and a locally hosted **Ollama** server.
+
+### Switching Providers
+Update the `backend/.env` file:
+
+```bash
+# To use Gemini:
+LLM_PROVIDER=gemini
+GEMINI_API_KEY=your_key_here
+
+# To use Ollama:
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+```
+
+### Models Used
+- **Gemini**: `gemini-2.5-flash` / `gemini-embedding-001`
+- **Ollama**: `llama3.1:8b` / `nomic-embed-text`
 
 ---
 

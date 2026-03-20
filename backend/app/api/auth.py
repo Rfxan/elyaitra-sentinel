@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, EmailStr, constr
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
+import bcrypt
 import hashlib
 from app.db.database import get_db
 from app.models.user import User
@@ -11,17 +11,17 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 # -------------------------
 # PASSWORD HANDLING
 # -------------------------
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def hash_password(password: str) -> str:
-    password = hashlib.sha256(password.encode()).hexdigest()
-    return pwd_context.hash(password)
+    # Pre-hash with SHA256 to handle long passwords and maintain consistency
+    password_hash = hashlib.sha256(password.encode()).hexdigest().encode()
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password_hash, salt).decode()
 
 
 def verify_password(password: str, hashed_password: str) -> bool:
-    password = hashlib.sha256(password.encode()).hexdigest()
-    return pwd_context.verify(password, hashed_password)
+    password_hash = hashlib.sha256(password.encode()).hexdigest().encode()
+    return bcrypt.checkpw(password_hash, hashed_password.encode())
 
 
 # -------------------------

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -142,13 +143,21 @@ export default function ChatTutor({
 
                   <div
                     className={cn(
-                      "max-w-[80%] rounded-2xl px-4 py-3 text-sm",
+                      "max-w-[90%] rounded-2xl px-4 py-3 text-sm",
                       m.role === "user"
                         ? "bg-primary text-primary-foreground ml-auto"
-                        : "bg-card border border-border/50"
+                        : "bg-card border border-border/50 shadow-sm"
                     )}
                   >
-                    {m.content}
+                    {m.role === "assistant" ? (
+                      <div className="prose prose-sm dark:prose-invert max-w-none text-foreground break-words leading-relaxed">
+                        <ReactMarkdown>
+                          {m.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      m.content
+                    )}
                   </div>
                 </div>
               ))}
