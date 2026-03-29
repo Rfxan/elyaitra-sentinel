@@ -54,13 +54,31 @@ def startup_event():
     print("🚀 Backend started")
     init_db()
 
-    # 🔥🔥🔥 TEMP: FORCE INGEST FOR DEBUG
-    print("🔥 CALLING INGEST FROM STARTUP (OLLAMA MODE) 🔥")
+    # # 🔥🔥🔥 TEMP: FORCE INGEST FOR DEBUG
+    # print("🔥 CALLING INGEST FROM STARTUP (OLLAMA MODE) 🔥")
+    # try:
+    #     ingest()
+    # except Exception as e:
+    #     print("❌ INGEST ERROR:", repr(e))
+# ---------------------------
+# STARTUP
+# ---------------------------
+@app.on_event("startup")
+def startup_event():
+    print("🚀 Backend started")
+    init_db()
+
+
+# ---------------------------
+# 🔥 MANUAL INGEST ENDPOINT
+# ---------------------------
+@app.get("/ingest")
+def run_ingest():
     try:
         ingest()
+        return {"status": "ingest complete"}
     except Exception as e:
-        print("❌ INGEST ERROR:", repr(e))
-
+        return {"error": str(e)}
 # ---------------------------
 # ROUTERS
 # ---------------------------
