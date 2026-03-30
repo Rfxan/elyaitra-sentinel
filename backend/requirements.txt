@@ -45,6 +45,7 @@ google-generativeai>=0.8.0
 # === LANGCHAIN ===
 langchain==0.1.16
 langchain-community==0.0.36
+sentence-transformers
 
 # === PAYMENTS ===
 razorpay==1.4.2

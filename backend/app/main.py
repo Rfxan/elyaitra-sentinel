@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from app.security.logger import send_log
+import time
 
 import os
 import warnings
@@ -47,19 +49,47 @@ app.add_middleware(
 )
 
 # ---------------------------
-# STARTUP
+# SECURITY LOGGING MIDDLEWARE
 # ---------------------------
-@app.on_event("startup")
-def startup_event():
-    print("🚀 Backend started")
-    init_db()
+@app.middleware("http")
+async def security_logging_middleware(request: Request, call_next):
+    # Capture request details
+    ip = request.client.host if request.client else "unknown"
+    method = request.method
+    path = request.url.path
+    
+    # Safely read body
+    body_content = ""
+    try:
+        # Only attempt to read body for methods that typically have one
+        if method in ["POST", "PUT", "PATCH"]:
+            body_bytes = await request.body()
+            # Re-inject body for downstream handlers
+            async def receive():
+                return {"type": "http.request", "body": body_bytes}
+            request._receive = receive
+            
+            try:
+                body_content = body_bytes.decode("utf-8")
+            except:
+                body_content = "<binary/unparseable>"
+    except Exception:
+        pass
 
-    # # 🔥🔥🔥 TEMP: FORCE INGEST FOR DEBUG
-    # print("🔥 CALLING INGEST FROM STARTUP (OLLAMA MODE) 🔥")
-    # try:
-    #     ingest()
-    # except Exception as e:
-    #     print("❌ INGEST ERROR:", repr(e))
+    # Send log (non-blocking)
+    send_log({
+        "type": "request",
+        "ip": ip,
+        "method": method,
+        "path": path,
+        "body": body_content,
+        "timestamp": time.time()
+    })
+
+    # Continue request
+    response = await call_next(request)
+    return response
+
 # ---------------------------
 # STARTUP
 # ---------------------------

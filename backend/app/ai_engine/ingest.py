@@ -13,12 +13,13 @@ print("🔥🔥🔥 INGEST MODULE LOADED 🔥🔥🔥")
 # --------------------------------------------------
 load_dotenv()
 
-from app.ai_engine.providers import get_provider
+from app.ai_engine.embeddings import get_embeddings
 
 # --------------------------------------------------
-# LLM PROVIDER
+# LLM PROVIDER (INGEST ONLY USES OLLAMA)
 # --------------------------------------------------
-provider = get_provider()
+print("🚀 Starting ingest with Ollama embeddings")
+embeddings = get_embeddings()
 
 SUBJECT = "chemistry"
 
@@ -87,7 +88,7 @@ def extract_text_from_pptx(path: str) -> str:
 # --------------------------------------------------
 def embed(text: str) -> list[float]:
     print("🧠 Embedding chunk...")
-    return provider.embed(text)
+    return embeddings.embed_query(text)
 
 # --------------------------------------------------
 # INGEST
@@ -141,11 +142,11 @@ def ingest():
             batch = chunks[i:i + batch_size]
             print(f"➕ Adding batch {i // batch_size + 1} ({len(batch)} chunks)")
             
-            embeddings = provider.embed_batch(batch)
+            chunk_embeddings = embeddings.embed_documents(batch)
             
             collection.add(
                 documents=batch,
-                embeddings=embeddings,
+                embeddings=chunk_embeddings,
                 metadatas=[{
                     "subject": SUBJECT,
                     "unit": str(unit),

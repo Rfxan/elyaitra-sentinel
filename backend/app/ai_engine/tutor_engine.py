@@ -4,7 +4,9 @@ from typing import List, Dict
 
 from app.ai_engine.retriever import retrieve
 from app.ai_engine.providers import get_provider
+from app.security.logger import send_log
 import os
+import time
 
 def _load_prompt_file(filename: str) -> str:
     base_dir = os.path.dirname(os.path.abspath(__file__))  # ai_engine/
@@ -76,6 +78,16 @@ CONTEXT FROM YOUR SYLLABUS (TOPIC: {topic}, SUBJECT: {subject}):
 STUDENT'S REQUEST:
 {message}
 """
+
+        # --------------------
+        # 4.5. Log LLM Prompt (Security)
+        # --------------------
+        send_log({
+            "type": "llm",
+            "prompt": final_prompt,
+            "user": user_id,
+            "timestamp": time.time()
+        })
 
         # --------------------
         # 5. Generate answer

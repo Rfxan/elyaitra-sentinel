@@ -1,10 +1,12 @@
 from rank_bm25 import BM25Okapi
 from app.ai_engine.chroma_client import get_collection
 from app.ai_engine.providers import get_provider
+from app.ai_engine.embeddings import get_embeddings
 from app.ai_engine import config
 from flashrank import Ranker, RerankRequest
 
 provider = get_provider()
+embedding_model = get_embeddings()
 _ranker = None
 
 def get_ranker():
@@ -14,7 +16,7 @@ def get_ranker():
     return _ranker
 
 def embed(text: str) -> list[float]:
-    return provider.embed(text)
+    return embedding_model.embed_query(text)
 
 def _expand_query(question: str) -> list[str]:
     """Use LLM to generate 3 variations of the question for better retrieval."""
@@ -59,10 +61,8 @@ def retrieve(question: str, subject: str, unit: int | None = None, k: int | None
         
         print(f"🔍 RETRIEVER | subject={subject} | queries={len(queries)} | k={k}")
         collection = get_collection(subject)
-        emb_provider = provider
-        
-        # Optimize Quote: Use embed_batch to get all embeddings in ONE request
-        all_embeddings = emb_provider.embed_batch(queries)
+        # Optimize Quote: Use embed_documents to get all embeddings in ONE request
+        all_embeddings = embedding_model.embed_documents(queries)
         
         all_stage1_docs = []
         seen_docs = set()
