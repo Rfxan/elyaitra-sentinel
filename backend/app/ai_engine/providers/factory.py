@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from app.ai_engine.providers.gemini import GeminiProvider
 from app.ai_engine.providers.ollama import OllamaProvider
+from app.ai_engine.providers.groq import GroqProvider
 from app.ai_engine.providers.base import LLMProvider
 from app.ai_engine import config
 
@@ -10,6 +11,15 @@ load_dotenv()
 def get_provider() -> LLMProvider:
     provider_type = config.LLM_PROVIDER
     
+    if provider_type == "groq":
+        api_key = os.getenv("GROQ_API_KEY")
+        if not api_key:
+            raise RuntimeError("GROQ_API_KEY not set in environment")
+        return GroqProvider(
+            api_key=api_key,
+            model_name=config.GROQ_DEFAULT_MODEL
+        )
+
     if provider_type == "ollama":
         try:
             # Try to get Ollama provider

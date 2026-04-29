@@ -50,7 +50,10 @@ const Signup = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.detail || "Signup failed");
+        const errorMsg = typeof data.detail === 'string' ? data.detail : 
+                        (Array.isArray(data.detail) ? data.detail[0].msg : 
+                        (typeof data.detail === 'object' ? JSON.stringify(data.detail) : "Signup failed"));
+        throw new Error(errorMsg);
       }
 
       // ✅ Persist login (same as Next.js)
@@ -59,7 +62,10 @@ const Signup = () => {
       // 👉 Redirect (React equivalent of router.replace)
       navigate("/subjects", { replace: true });
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      console.error("Signup error:", err);
+      const message = err instanceof Error ? err.message : 
+                     (typeof err === 'object' ? JSON.stringify(err) : String(err));
+      setError(message || "Something went wrong");
     } finally {
       setLoading(false);
     }

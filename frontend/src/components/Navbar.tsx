@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import GetStartedButton from "./GetStartedButton";
 import { cn } from "@/lib/utils";
 
@@ -70,6 +70,13 @@ const Navbar = () => {
             >
               Subjects
             </button>
+
+            <Link
+              to="/sentinel"
+              className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full text-cyan-400 hover:bg-white/[0.05] transition-all"
+            >
+              <Shield size={14} /> SentinelML
+            </Link>
           </div>
 
           {/* Right */}
@@ -118,6 +125,14 @@ const Navbar = () => {
               >
                 Features
               </a>
+
+              <Link
+                to="/sentinel"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-3 text-sm font-medium rounded-xl text-cyan-400 hover:bg-white/[0.05]"
+              >
+                SentinelML
+              </Link>
 
               <hr className="my-2 border-white/10" />
 

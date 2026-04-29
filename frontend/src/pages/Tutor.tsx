@@ -72,19 +72,7 @@ export default function Tutor() {
 
     if (!userId) {
       navigate("/signup", { replace: true });
-      return;
     }
-
-    fetch(`${API_URL}/access/subjects?user_id=${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.allowed === false) {
-          navigate("/payment", { replace: true });
-        }
-      })
-      .catch(() => {
-        // ignore network issues
-      });
   }, [navigate]);
 
   /* --------------------------------------------------

@@ -45,6 +45,7 @@ class TutorEngine:
         # 2. Retrieve syllabus content
         # --------------------
         query = message if message else topic
+        print(f"🔎 RAG DEBUG | Query: '{query}' | Subject: {subject} | Unit: {unit}")
 
         docs = retrieve(
             question=query,
@@ -56,12 +57,15 @@ class TutorEngine:
         # 3. Syllabus lock
         # --------------------
         if not docs:
+            print("⚠️ RAG DEBUG | No documents found in database.")
             return {
                 "answer": "❌ This is not in your syllabus. You can safely skip this.",
                 "events": []
             }
 
+        print(f"✅ RAG DEBUG | Found {len(docs)} relevant chunks.")
         syllabus_context = "\n".join(docs)
+        print(f"📝 RAG DEBUG | Context Preview (100 chars): {syllabus_context[:100]}...")
 
         # --------------------
         # 4. Build prompt
@@ -82,6 +86,7 @@ STUDENT'S REQUEST:
         # --------------------
         # 4.5. Log LLM Prompt (Security)
         # --------------------
+        print(f"🤖 RAG DEBUG | Sending final prompt to Groq ({len(final_prompt)} chars)")
         send_log({
             "type": "llm",
             "prompt": final_prompt,

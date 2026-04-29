@@ -1,0 +1,82 @@
+/* ═══════════════════════════════════════════
+   SentinelML — Corporate Enterprise Theme
+   Clean, professional GitHub-style design
+   ═══════════════════════════════════════════ */
+
+/* ── Base Surface Classes ── */
+.glass {
+  @apply bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-[#30363d];
+}
+
+.glass-card {
+  @apply bg-white dark:bg-[#161b22] rounded-lg border border-slate-200 dark:border-[#30363d] shadow-sm transition-shadow duration-200;
+}
+
+.glass-card:hover {
+  @apply shadow-md;
+}
+
+/* ── Accent Borders ── */
+.neon-border {
+  @apply border-l-4 border-[#58a6ff] bg-[#58a6ff]/5;
+}
+
+/* ── Text Utilities ── */
+.neon-text-blue {
+  @apply text-[#58a6ff] font-semibold;
+}
+
+.neon-text-purple {
+  @apply text-slate-700 dark:text-[#8b949e] font-semibold;
+}
+
+/* ── Animations ── */
+.animate-slide-in-right {
+  animation: slide-in-right 0.2s ease-out forwards;
+}
+
+.animate-slide-in-top {
+  animation: slide-in-top 0.2s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ── Scrollbar ── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-[#30363d] rounded-full;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-[#484f58];
+}
+
+/* ── Keyframes ── */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-top {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

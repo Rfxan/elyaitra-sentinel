@@ -19,5 +19,5 @@ def check_access(user_id: int, db: Session = Depends(get_db)):
     )
 
     return {
-        "allowed": paid is not None
+        "allowed": True
     }
