@@ -86,6 +86,19 @@ async def security_logging_middleware(request: Request, call_next):
         "timestamp": time.time()
     })
 
+    # 🛡️ GLOBAL HONEYPOT CHECK
+    # Check if IP is blocked in SentinelML and intercept with a honeypot
+    from app.security.logger import get_honeypot_response
+    from fastapi.responses import JSONResponse
+    
+    honeypot_answer = get_honeypot_response(ip)
+    if honeypot_answer:
+        print(f"🍯 HONEYPOT | Intercepting request to {path} from {ip}")
+        return JSONResponse(content={
+            "answer": honeypot_answer,
+            "events": ["HONEYPOT_ACTIVE", "DECEPTION_ENGAGED", "GLOBAL_INTERCEPT"]
+        })
+
     # Continue request
     response = await call_next(request)
     return response

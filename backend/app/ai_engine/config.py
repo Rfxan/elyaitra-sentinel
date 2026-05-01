@@ -11,7 +11,9 @@ LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq").lower()
 GEMINI_DEFAULT_MODEL = "models/gemini-2.5-flash"
 GEMINI_EMBEDDING_MODEL = "models/gemini-embedding-001"
 
-GROQ_DEFAULT_MODEL = os.getenv("GROQ_DEFAULT_MODEL", "llama-3.3-70b-versatile")
+GROQ_DEFAULT_MODEL = "llama-3.1-8b-instant"
+
+OPENROUTER_DEFAULT_MODEL = os.getenv("OPENROUTER_DEFAULT_MODEL", "meta-llama/llama-3.1-8b-instruct")
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_DEFAULT_MODEL = "llama3.1:8b"

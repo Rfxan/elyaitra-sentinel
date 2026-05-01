@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 from typing import List
 
 from app.ai_engine.tutor_engine import TutorEngine
+from app.security.logger import get_honeypot_response
+from fastapi import Request
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
@@ -33,8 +35,12 @@ class TutorResponse(BaseModel):
 # --------------------------------------------------
 
 @router.post("/tutor", response_model=TutorResponse)
-def tutor_endpoint(payload: TutorRequest):
+def tutor_endpoint(payload: TutorRequest, request: Request):
     try:
+        ip = request.client.host if request.client else "unknown"
+        
+        # 🛡️ SENTINEL BLOCK CHECK (Handled globally in middleware)
+
         print(
             f"🧠 TUTOR | user={payload.user_id} | "
             f"{payload.subject}-{payload.unit} | "

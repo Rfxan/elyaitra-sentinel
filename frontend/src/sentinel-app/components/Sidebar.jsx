@@ -25,7 +25,6 @@ const navItems = [
   { name: 'Attack', icon: Target },
   { name: 'Block List', icon: Ban },
   { name: 'Health', icon: HeartPulse },
-  { name: 'Extraction', icon: Eye },
   { name: 'Versions', icon: History },
   { name: 'SIEM Log', icon: Terminal },
 ];

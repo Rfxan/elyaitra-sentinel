@@ -4,8 +4,8 @@ import AttackTimeline from "./components/AttackTimeline";
 import BlockList from "./components/BlockList";
 import { useTrafficPolling } from "./hooks/useTrafficPolling";
 
-// SentinelML backend is always on port 8000
-const SENTINEL_BASE_URL = "http://localhost:8000";
+// SentinelML backend is on port 8003 (adjusted for conflict)
+const SENTINEL_BASE_URL = "http://localhost:8003";
 
 export default function SentinelPage() {
   const { trafficFeed, modelStats, blockedIPs, isLive } = useTrafficPolling(SENTINEL_BASE_URL);
@@ -31,7 +31,7 @@ export default function SentinelPage() {
           <span className={`text-xs font-mono ${isLive ? "text-green-400" : "text-red-400"}`}>
             {isLive ? "LIVE" : "OFFLINE"}
           </span>
-          <span className="text-xs text-gray-500 ml-2">localhost:8000</span>
+          <span className="text-xs text-gray-500 ml-2">localhost:8003</span>
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from app.ai_engine.providers.gemini import GeminiProvider
 from app.ai_engine.providers.ollama import OllamaProvider
+from app.ai_engine.providers.openrouter import OpenRouterProvider
 from app.ai_engine.providers.groq import GroqProvider
 from app.ai_engine.providers.base import LLMProvider
 from app.ai_engine import config
@@ -18,6 +19,15 @@ def get_provider() -> LLMProvider:
         return GroqProvider(
             api_key=api_key,
             model_name=config.GROQ_DEFAULT_MODEL
+        )
+
+    if provider_type == "openrouter":
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENROUTER_API_KEY not set in environment")
+        return OpenRouterProvider(
+            api_key=api_key,
+            model_name=config.OPENROUTER_DEFAULT_MODEL
         )
 
     if provider_type == "ollama":

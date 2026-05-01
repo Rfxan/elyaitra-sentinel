@@ -5,7 +5,6 @@ import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import AlertHistory from './components/AlertHistory';
 import TrafficFeed from './components/TrafficFeed';
-import ExtractionRadar from './components/ExtractionRadar';
 import ModelVersions from './components/ModelVersions';
 import SIEMLog from './components/SIEMLog';
 import BlockList from './components/BlockList';
@@ -67,11 +66,11 @@ function MainApp() {
       <FlashOverlay />
       <ToastContainer />
       <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} />
-      
+
       {/* Main Content wrapper */}
       <div className="flex-1 ml-64 flex flex-col relative min-h-screen min-w-0">
         <Topbar isLive={globalDataStr.isLive} theme={theme} setTheme={setTheme} activeItem={activeItem} />
-        
+
         <main className="flex-1 p-6 relative flex flex-col bg-slate-50 dark:bg-[#0d1117] min-w-0 overflow-x-hidden">
           {activeItem === 'Dashboards' ? (
             <Dashboard data={globalDataStr} />
@@ -89,14 +88,10 @@ function MainApp() {
             <ThreatView />
           ) : activeItem === 'Attack' ? (
             <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto h-full overflow-y-auto pb-10">
-               <div className="h-[500px] shrink-0">
-                  <AttackChart />
-               </div>
-               <AdversarialSimulator />
-            </div>
-          ) : activeItem === 'Extraction' ? (
-            <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto h-full">
-              <ExtractionRadar />
+              <div className="h-[500px] shrink-0">
+                <AttackChart />
+              </div>
+              <AdversarialSimulator />
             </div>
           ) : activeItem === 'Versions' ? (
             <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto h-full">
@@ -112,9 +107,9 @@ function MainApp() {
             <HealthView />
           ) : (
             <div className="flex-1 glass-card flex items-center justify-center min-h-[60vh] mt-4">
-              <EmptyState 
-                message={`${activeItem} Module Offline`} 
-                subMessage="This module is currently disabled or undergoing maintenance. Please return to Dashboards." 
+              <EmptyState
+                message={`${activeItem} Module Offline`}
+                subMessage="This module is currently disabled or undergoing maintenance. Please return to Dashboards."
               />
             </div>
           )}
@@ -128,7 +123,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AlertProvider>
-         <MainApp />
+        <MainApp />
       </AlertProvider>
     </ErrorBoundary>
   );
