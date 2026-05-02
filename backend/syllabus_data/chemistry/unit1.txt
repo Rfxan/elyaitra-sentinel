@@ -1,0 +1,603 @@
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Module-1 Electrochemical Advances in Sensing Devices
+Part(a)- Introduction to Electrochemistry
+Introduction to Electrochemistry: Introduction, Basic Overview of Nernst Equation, Types of
+electrode systems with examples.
+Reference electrodes: Primary and secondary reference electrodes with examples, Advantages of
+secondary reference electrodes over SHE. Construction, working, and application of calomel
+electrode to determine electrode potential.
+Concentration cells: Definition, types, construction and working of electrolyte concentration cell,
+Numerical problems on concentration cells.
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 1
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Introduction
+Electrochemistry deals with the interaction of matter and electrical energy i.e., producing
+electrical energy from chemical reaction (spontaneous process) or bringing out chemical
+reactions by applying electrical energy (non-spontaneous process). A device used for
+producing an electrical energy from a chemical reaction (redox reaction) is called an
+electrochemical cell.
+(or)
+It is the branch of chemistry, which deals with the study of inter-conversion of electrical energy
+into chemical energy that takes place through oxidation reduction reactions.
+
+Electrical
+Energy
+
+Chemical
+Change
+
+Electrochemistry plays a crucial role in understanding how electrical energy can drive the chemical
+changes (electrolysis) and how chemical reactions can generate electricity (galvanic/voltaic cells).
+
+Key Terminology
+Oxidation: Loss of electrons
+Reduction: Gain of electrons
+Redox Reaction: A reaction involving both oxidation and reduction simultaneously.
+Electrochemical Cell: A device that converts chemical energy into electrical energy (galvanic cell)
+or electrical energy into chemical energy (electrolytic cell).
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 2
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Anode: Electrode where oxidation occurs.
+Cathode: Electrode where reduction occurs.
+Electrolyte: A substance that conducts electricity by producing ions in solution or molten state.
+Cell Potential (EMF) : The potential difference between two electrodes, which drives the flow of
+electrons.
+Electrode potential: The potential difference developed between a metal electrode and the solution
+of its ions when the electrode is immersed in the solution.
+The tendency of the electrode to gain or lose electrons.
+For example, when a zinc electrode is placed in a zinc sulfate solution, a potential difference is
+established due to charge buildup
+A higher potential means the electrode has a stronger tendency to gain electrons (reduction).
+A lower potential means the electrode has a stronger tendency to lose electrons (oxidation).
+So, cell potential (Ecell/ EMF) is just the voltage difference between two electrodes, which drives
+the flow of electrons.
+
+EMF/ Ecell = Ecathode - Eanode
+The electrical double layer is just a thin "layer of charges" formed at the boundary between a solid
+and a liquid due to attraction of opposite charges.
+
+Key Engineering Applications of Electrochemistry
+Energy Systems: Batteries, Fuel Cells, Supercapacitors
+Corrosion Engineering: To understand metal corrosion and prevention methods
+Electroplating: Coating with Cr, Ni, Au for corrosion resistance and aesthetics.
+Environmental Engineering: Wastewater treatment. Removal of pollutants etc.
+Sensors: Electrochemical sensors for detecting heavy metals, gases, and organics.
+Future Engineering Directions: Green Hydrogen; Recyclable batteries, Smart Grids
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 3
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Nernst Equation (Overview)
+Nernst equation connects thermodynamics, equilibrium, and electrochemistry in one
+simple relation.
+The Nernst equation relates the electrode potential of a cell to the standard electrode
+potential, temperature, the number of electrons involved in the redox reaction, and the
+concentrations (or pressures) of reactants and products.
+For a general reaction:
+
+𝐸𝑐𝑒𝑙𝑙 = 𝐸 ∘ −
+
+where:
+
+0.0591
+𝑛
+
+log 𝑄
+
+𝐸 = electrode potential at given conditions
+𝐸 ∘ = standard potential
+
+𝑛 = number of electrons transferred
+𝑄 = reaction quotient
+Standard Electrode Potential (E°): measured under standard conditions (1 M, 1
+atm, 25°C).
+TYPES OF ELECTRODES
+•
+•
+•
+•
+•
+
+Electrodes can be defined as a conductor through which electricity enters or leaves an object.
+The two common terms we hear in electrode systems is cathode and anode.
+The anode is the electrode where electricity moves into.
+The cathode is the electrode where electricity is given out or flows out.
+Electrodes can be classified into many types and among all the major are;
+
+1. Metal/Metal ion electrode (M/Mn+)
+When a metal is immersed in its own salt solution such type of electrode is called
+metal/metal ion electrode is formed. Eg: Zn/Zn2+, Cu/ Cu2+
+In general M/Mn+
+The electrode reaction is Mn+ + ne− → M
+Electrode potential depends on the logarithmic concentration of metal ion.
+2. Gas Electrode
+The gas is bubbled around an inert metal like platinum which is immersed in a solution containing ions
+of the same gas. Eg: Hydrogen electrode or SHE, chlorine electrode. Electrode potential depends on
+the logarithmic concentration of the ion and the pressure at which the gas is bubbled.
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 4
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+3. Metal insoluble metal salt/ common ion electrode
+The metal (M) is covered with an insoluble metal salt (MX) is in contact with a solution
+containing an anion of the insoluble metal salt (X).
+Eg: Calomel electrode (Hg/Hg2Cl2/Cl−), silver-silver chloride electrode (Ag/AgCl/Cl−)
+4. Redox electrode
+In this electrode, an inert metal is immersed in a solution containing ions of the same
+metal having two different oxidation states. Eg: Pt/Fe2+/Fe3+
+Reaction: Fe2+→Fe3+
+Electrode potential is the Ratio of logarithmic concentration of all ionic species involved in the redox
+reaction.
+5. Ion selective electrode
+In this type, the sensing part of the electrode is usually made of an ion-specific
+membrane. The membrane can be glass membrane, crystalline membrane and ion-exchange resin
+membrane. Eg: Glass electrode.
+Reference electrodes
+Reference electrodes are the electrodes whose potential is known, stable and used for the
+determination of potential of unknown electrodes.
+Note: Types of reference electrodes:
+Primary reference electrode:
+Whose potential is fixed as zero. Example: Standard hydrogen electrode (SHE).
+Limitations of SHE
+It’s difficult to transport.
+It's difficult to construct and maintain.
+It's difficult to maintain the pressure of H2 gas and concentration of the acid solution like HCl.
+It's difficult to get pure hydrogen gas.
+Impurities in H2 and HCl spoil ideal platinum electrodes.
+Secondary reference electrode:
+Whose potential is calculated by connecting to the SHE. Secondary reference electrodes have several
+advantages over SHE. These electrodes are commonly used for determining the electrode potentials
+of other metals. The two commonly used secondary reference electrodes are calomel electrode and
+silver-silver electrode.
+• Secondary reference electrodes are easier to make and maintain than the SHE.
+• Secondary reference electrodes can be used with greater accuracy than the SHE.
+• Secondary reference electrodes have a stable, known potential that doesn't change over time.
+• Secondary reference electrodes are chemically and electrochemically reversible.
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 5
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Calomel Electrode
+Construction:
+1. The calomel electrode’s structure consists of an outer glass tube that
+is fitted with a frit at the bottom, which permits electrical contact with
+a solution outside the electrode.
+2. An inner tube is placed inside an outer tube. The bottom of the inner
+tube has glass wool to provide an electrical contact between the
+contents of both tubes.
+3. Mercury paste is packed on the innermost tube, with mercurous
+chloride being dispersed in a saturated potassium chloride solution.
+4. The calomel electrode is represented as, Hg /Hg2Cl2/ ClWorking:
+Calomel electrode behaves as anode or cathode depending upon the nature of another
+electrode. The half-cell reaction when it acts as an anode is
+2𝐻𝑔 + 2𝐶𝑙− → 𝐻𝑔2𝐶𝑙2 + 2𝑒−
+
+The half-cell reaction when it acts as a cathode is
+𝐻𝑔2𝐶𝑙2 + 2𝑒− → 2𝐻𝑔 + 2𝐶𝑙−
+
+The electrode reaction is,
+Applying Nernst equation,
+
+𝐻𝑔2𝐶𝑙2 + 2𝑒− ↔ 2𝐻𝑔 + 2𝐶𝑙−
+0.0591
+
+E = 𝐸0 +
+
+𝑙𝑜𝑔
+
+𝑛
+
+𝐸 = 𝐸0 +
+
+0.0591
+
+[𝑅𝑒𝑎𝑐𝑡𝑎𝑛𝑡𝑠]
+[𝑃𝑟𝑜𝑑𝑢𝑐𝑡𝑠]
+
+𝑙𝑜𝑔
+
+[𝐻𝑔2𝐶𝑙2]
+[𝐻𝑔]2[𝐶𝑙−]2
+
+𝑛
+
+Since [Hg2Cl2] = [Hg]2 = 1, the above equation becomes
+𝐸 = 𝐸0 +
+
+0.0591
+
+log
+
+2
+
+1
+[𝐶𝑙−]2
+
+The potential of calomel electrode is measured with respect to SHE and it depends on
+concentration of KCl solution used. The calomel electrode potential is depending on the
+concentration of chloride ions in KCl. If the Concentration of chloride ions increases, the
+potential decreases and vice versa. (The potential of calomel is inversely proportional to the
+concentration of chloride ions)
+0.1N
+1N
+Saturated KCl
+Conc. KCl
+Potential (V) 0.334V
+0.281V
+0.242V
+Applications: Used to determine the potential of the other electrodes.
+Used as reference electrode in all potentiometric determination.
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 6
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Concentration cells– Introduction, construction and working
+Concentration cells can be defined as electrochemical cells that consist of two half-cells wherein the
+electrodes are the same, but they vary in concentration. As the cell strives to reach equilibrium, the
+more concentrated half-cell is diluted, and the half-cell of lower concentration has its concentration
+increased via the transfer of electrons between these two half cells. Therefore, as the cell moves
+towards chemical equilibrium, a potential difference is created.
+Potential difference arises due to difference in electrolyte concentration.
+Types of Concentration Cells
+Concentration cells can be classified into two types, namely:
+Electrode Concentration Cells: Contain identical solutions as electrolytes but half-cells differ in the
+concentration of the electrode
+An Example for this type of cell would be a cell consisting of two hydrogen electrodes which are
+subjected to varying pressures but are immersed in the same solutions (containing hydrogen ions).
+Electrolyte Concentration Cells: These cells consist of identical electrodes immersed in the
+solutions of the same electrolytes but with varying concentrations. In these cells, the electrolyte tends
+to diffuse from higher concentration solutions towards solutions of lower concentration.
+An example for this type of cell is a cell where the anode consists of Zn/Zn2+(0.01M) whereas the
+cathode consists of Zn2+(0.1M)/Zn.
+Construction:
+The concentration cell is a type of galvanic cell where the half-cells consist of the same substance but
+at different concentrations. These cells give a small potential difference while moving towards
+chemical equilibrium which can be measured using a voltmeter.
+Ex: The anode consists of Cu/Cu2+(0.001M) whereas the cathode consists of Cu2+(0.1M)/Cu. In this
+cell, the flow of electrons from the anode to the cathode is due to the reduction of Cu2+ ions at the
+cathode into metallic copper.
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 7
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Cell representation
+
+Cell reaction
+At anode
+At cathode
+Net reaction
+Nernst equation for concentration cell
+Nernst equation for anodic reaction:
+𝑜
+𝐸𝑎𝑛𝑜𝑑𝑒 = 𝐸𝑎𝑛𝑜𝑑𝑒
++
+
+Nernst equation for cathodic reaction:
+
+2.303𝑅𝑇
+𝑙𝑜𝑔 𝐶1
+𝑛𝐹
+
+𝑜
+𝐸𝑐𝑎𝑡ℎ𝑜𝑑𝑒 = 𝐸𝑐𝑎𝑡ℎ𝑜𝑑𝑒
++
+
+2.303𝑅𝑇
+𝑙𝑜𝑔 𝐶2
+𝑛𝐹
+
+Cell potential: When reduction potential of both electrodes is taken into consideration,
+
+𝐸𝑐𝑒𝑙𝑙 = 𝐸𝑟𝑒𝑑 (𝑐𝑎𝑡ℎ𝑜𝑑𝑒) − 𝐸𝑟𝑒𝑑 (𝑎𝑛𝑜𝑑𝑒)
+𝑜
+𝑜
+𝐸𝑐𝑒𝑙𝑙 = (𝐸𝑟𝑒𝑑
+(𝑐𝑎𝑡ℎ𝑜𝑑𝑒) − 𝐸𝑟𝑒𝑑
+(𝑎𝑛𝑜𝑑𝑒)) +
+
+2.303𝑅𝑇
+𝑛𝐹
+
+𝑙𝑜𝑔
+
+𝐶2
+𝐶1
+
+In concentration cell, both electrodes are same, hence
+𝑜
+𝑜
+(𝑐𝑎𝑡ℎ𝑜𝑑𝑒) − 𝐸𝑟𝑒𝑑
+𝐸𝑟𝑒𝑑
+(𝑎𝑛𝑜𝑑𝑒)= 0
+
+𝐸𝑐𝑒𝑙𝑙 =
+
+2.303𝑅𝑇
+𝐶2
+𝑙𝑜𝑔
+𝑛𝐹
+𝐶1
+Or
+
+0.0591
+𝐶2
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+𝑎𝑡 298 𝐾
+𝑛
+𝐶1
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 8
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Numerical problem on concentration cells
+1. EMF of the cell Cu/CuSO4 // CuSO4/Cu is 0.0595V at 250C. Find X value?
+It is clear that C1= 0.001M, C2 = X and n= 2
+Ans:
+0.0591
+𝐶2
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+𝑛
+𝐶1
+0.0591
+𝑋
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+2
+0.001
+𝑋 = 0.103 𝑀
+2. A concentration cell is constructed by dipping copper rods in 0.001M and 0.1
+M copper sulphate solutions. Calculate the EMF of cell at 298K.
+Ans: Cell representation
+Cell reactions
+Anode (oxidation): Cu → Cu2+ + 2eCathode (Reduction): Cu2+ + 2e- → Cu
+Overall reaction: Cu2+ C2= 0.1 M → Cu2+ C1=0.001M
+0.0591
+𝐶2
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+𝑛
+𝐶1
+0.0591
+0.1
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+2
+0.001
+E cell = 0.0591 V
+3. The spontaneous galvanic cell tin/ tin ion 0.02 M // tin ion (0.06M)/Tin develops
+an emf of 0.0141 V at 298K. Calculate the valency of Tin.
+Apply Nernst equation for concentration cells
+0.0591
+𝐶2
+𝐸𝑐𝑒𝑙𝑙 =
+𝑙𝑜𝑔
+𝑛
+𝐶1
+Rearrange the equation
+0.0591
+𝐶2
+𝑛=
+𝑙𝑜𝑔
+𝐸𝑐𝑒𝑙𝑙
+𝐶1
+𝑛=
+
+0.0591
+0.06
+𝑙𝑜𝑔
+0.0141
+0.02
+n=2
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Page 9
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Muodule-1
+Part(b): Smart Sensors and Devices
+Smart Sensors and Devices: Introduction to sensor terminologies: Definitions of Transducer,
+Actuators and Sensors. Principle, components, and working mechanism of conductometric and pH
+sensors. Conductometric titration of acid mixture using strong base, and Construction and working
+of glass electrode to determine pH of unknown solution.
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Sensors – Introduction
+We can see many types of sensors available around us, in our ofﬁces, gardens, shopping malls,
+homes, cars, toys etc. Sensors are helping us in our everyday lives…
+For instance, in our refrigerator, sensors help to maintain the cold temperature and turn on the
+light when you open the door.
+
+Definition: A sensor is a device that measures the physical phenomenon and converts into an
+electrical signal.
+Ex., Eyes, ears, and nose are all different types of sensors.
+
+Main Components of a Sensor:
+
+A sensor consists of three main components
+
+(i) The sensing unit contains the sensor itself which is based on a particular technology.
+(ii) The processing circuitry converts the physical variable into an electrical variable.
+(iii) The signal output contains the electronics connected to a control system.
+
+Smart Sensors
+•
+
+Smart sensors are simply sensors with microprocessors attached to them.
+
+•
+
+They take information from the physical environment and use embedded microprocessors to
+monitor, examine and maintain various systems.
+
+Smart sensors have four main functions
+Measurement: Simply collect the physical information and converts into electrical
+signals. For ex., temperature, pressure etc.,
+
+Configuration: Microprocessors set the operating properties of a smart sensor system, such as
+bias voltage or temperature.
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Verification: Smart sensors can perform self-diagnosis by looking for signs of errors in internal
+signals.
+
+Communication: Smart sensors can communicate with external devices and the cloud.
+The features of the smart sensor are; self-identification, smart calibration and
+compensation, multi-sensing capacity, sensor communication for configuration of remote &
+remote monitoring etc.
+
+Smart Sensor Working Principle
+Smart sensors work by capturing data from physical environments & changing their physical
+properties like speed, temperature, pressure, mass, or presence of humans into readable electrical
+signals.
+Usually, a smart sensor will have both transducer and actuator, in which transduce collects data
+from physical environment and then actuator performs the programmed function on that data. A
+simple example is shown below
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Instrumentation of conductometry and its application in the estimation of mixture
+of acids?
+• Conductance is a measure of how easily electricity (current) flows through a material
+or solution. It is reciprocal of resistance.
+• If resistance (R) tells us how much a material opposes current, then conductance (C)
+tells us how much it allows current.
+C=1/R = Ω-1 or mho or siemen
+• The Conductance of the solution is explained by considering ohm’s law.
+• According to ohm’s law the current flowing through the conductor is directly
+proportional to voltage and inversely proportional to the resistance.
+I = V/R
+• If you increase voltage across a conductor → current increases. If you increase
+resistance of the conductor → current decreases.
+Principle
+Conductometric sensors work on the principle of ionic conductivity of a solution.
+The electrical conductivity depends on the concentration, mobility, and charge of ions
+in the medium.
+When current (AC) is applied across two electrodes immersed in the solution, the ionic
+species carry current. The measured conductance (C) is directly proportional to the ionic
+concentration.
+Instrumentation: It consists of two
+platinum electrodes each of unit area of
+cross section placed at unit distance
+apart. The electrodes are dipped in the
+electrolytic solution taken in a beaker.
+It is connected to a conductometer to
+measure the conductance.
+The conductance is measured after the
+addition of the titrant at intervals of 0.5 mL
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+1BCHECS102/202
+
+Application of Conductometric titration
+It is used in the estimation of acids and bases present in the sample solutions. The
+possible combinations and conductance responses are explained below,
+Mixture of acids (strong & weak acid) v/s strong base
+HCl, CH3COOH v/s NaOH
+The strong acid like HCl is titrated against a strong base such as NaOH, the conductance
+first decreases due to replacement of fast-moving H+ ions by slow moving Na+ ions
+HCl + NaOH
+
+NaCl + H2O
+
+The weak acid do not get neutralized initially because of the well-known common ion
+effect.
+In the presence of excess of H+ ions, the ionization of the weak acid is suppressed and
+hence, weak acid like CH3COOH ionizes gradually after the first end point and the
+available H+ ions are neutralized giving the second end point. Because of common ion
+effect dissolution of acetic acid is suppressed. Hence it does not provide H + ions which
+are required for neutralization.
+After the neutralization point of HCl, CH3COOH, conductivity rapidly rises with further
+addition of NaOH because of continuous addition of fast moving OH- ions. A plot of
+conductance against the volume of base added is shown in the figure. The point of
+intersection of two curves gives the neutralization point.
+Advantages:
+• Mixture of acid can be titrated
+• Indicators are not used
+• Very weak acids can be titrated
+• Can be used with colored solution
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+1BCHECS102/202
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+1BCHECS102/202
+
+Department of Chemistry – BMS Institute of Technology & Management
+
+Dr. A. Vijaya Bhaskar Reddy, Assistant Professor
+
+1BCHECS102/202
+
+

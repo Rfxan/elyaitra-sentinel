@@ -1,0 +1,419 @@
+MODULE- 2: Electrode System
+
+Electrochemistry:
+It is the branch of chemistry, which deals with the study of inter
+conversion of electrical energy into chemical energy that takes place
+through electrochemical redox reactions.
+Electrochemical cell:
+The device which converts chemical energy into electrical energy
+and electrical energy into chemical energy are called electrochemical
+cells.
+Types of Electrochemical cell:
+➢Galvanic cell
+➢Electrolytic cell
+➢Concentration cell
+➢Fuel cell
+
+Galvanic Cell:
+➢A cell which converts chemical energy into electrical energy
+➢Cell reaction is spontaneous
+➢ΔG is –ve, Ecell is +ve
+➢Requires salt bridge to separate two half cells
+➢Anode: -ve electrode at which oxidation takes place
+➢Cathode: +ve electrode at which reduction takes place
+➢Example: Daniell Cell
+
+Single Electrode Potential (E):
+It is defined as the potential developed at the interphase between
+the metal and the solution, when a metal is dipped in a solution containing
+its own ions. The potential of an electrode depends on metal ion
+concentration and temperature.
+Metal electrode with low electrode potential (low reduction
+potential) acts as anode and undergoes oxidation whereas metal electrode
+with higher electrode potential (high reduction potential) acts as cathode at
+which reduction occurs.
+
+Standard Electrode Potential (E0):
+It is defined as the potential developed under standard conditions
+where the temperature is 298K, the pressure is 1 atm, and the concentration
+of the electrolytes is 1M.
+It is measured with the help of a reference electrode known as the
+standard hydrogen electrode and are reported in electrochemical series.
+
+Cell Potential or EMF of the cell (Ecell):
+The difference between the electrode potential of two
+electrodes constituting electro-chemical cell is called EMF or cell
+potential. The potential difference is caused by the ability of electrons
+to flow from one half cell to the other.
+Ecell = EC- EA
+Ecell is + ve when Ec > EA
+Standard Cell Potential or Standard EMF of the cell (E0cell):
+The standard cell potential is the potential difference between
+the cathode and anode when measured at 298 K, 1 atm, and with 1 M
+solutions.
+E0cell = E0C- E0A
+E0cell is + ve when E0c > E0A
+
+CONCENTRATION CELL
+A concentration cell is a limited form of electrochemical cell that has two
+equivalent half-cells of the same composition differing only in concentrations.
+Types:
+➢Electrode concentration cell
+It consists of two similar electrode at different conc. (different activity) and
+are dipped in same electrolyte solution.
+Example: Pt; H2(p1) | H+ ions solution | H2(p2); Pt
+➢Electrolyte concentration cell
+It consist of electrodes made up of same material that are immersed in
+solutions of the same two electrolyte but of different concentrations. The source of
+electrical energy in the cell is the tendency of the electrolyte to diffuse from a
+solution of higher concentration to that of lower concentration.
+Example:M|Mn+(C1)||Mn+(C2)|M,
+Zn|Zn2+ (C1)) || (Zn2+ (C2 )|Zn
+
+Construction:
+A cell in which both the electrodes are made up of zinc metal
+dipped in zinc sulphate solution of different concentrations.
+e-
+
+Anode
+
+V
+
+Cathode
+
+Zn|Zn2+ (C1)) || (Zn2+ (C2 )|Zn
+
+where C1 and C2 are the molar concentrations of Zn2+ ions in the two
+half cells.
+
+Cell Reactions:
+Anode: Zn
+Zn2+(C1) + 2e- (Oxidation)
+Cathode: Zn2+(C2) + 2eZn (Reduction)
+Net cell reaction: Zn2+(C2)
+Zn2+(C1)
+There is a transfer of ions from a solution of higher concentration to a solution of
+lower concentration.
+
+Nernst’s Equation: Wkt. Emf of the cell is given as
+Ecell = EC − EA
+Ecell = [E0 + 2.303 RT log C2] – [E0 + 2.303 RT log C1]
+nF
+nF
+Ecell = [2.303RT log C2 – 2.303RT log C1]
+[E0cell = 0]
+nF
+
+nF
+
+At 250C, Ecell = 0.0591 log C2
+
+n
+
+C1
+
+The following conclusions are drawn from the equation.
+1) When the two solutions are of the same concentration, log C2/C1=0 and hence
+no current flows through the cell.
+2) When C2>C1 then log C2/C1 = +ve & hence E is positive, thus the direction of the
+spontaneous reaction is from the more concentrated solution (C2) to less
+concentrated solution (C1).
+3) Higher the ratio of C2/C1 higher the value of cell potential.
+4) When C1>C2 then log C2/C1 = -ve , E is negative, non-spontaneous reaction.
+5) E0cell is zero, because both metal electrodes are made up of same materials.
+6) Ecell is positive, when electrode in contact with electrolyte of higher
+concentration (C2) acts as cathode and that in contact with electrolyte of lower
+concentration (C1) acts as anode.
+
+Types of Electrodes
+➢Metal-Metal ion electrode
+Ex: Zn/Zn2+(aq)
+➢Metal-Metal salt electrode
+Ex: Ag/AgCl(s), Hg/Hg2Cl2(s)
+➢Gas Electrode
+Ex: SHE (Standard Hydrogen Electrode)
+➢Redox electrode
+Electrode whose potential is dependent on the concentration of ions of
+same substance but are of different oxidation state
+Ex: Pt/Fe2+, Fe3+(aq)
+
+➢Reference electrodes
+These are the electrodes whose electrode potential values are known
+and are used for the determination of electrode potential values of other
+electrodes. The potential of the reference electrode remains constant and is
+independent of the concentration of the ions in the solution.
+Types of reference electrodes
+➢ Primary reference electrode
+This is the electrode whose electrode potential is arbitrarily taken as zero and used to
+measure the electrode potential of another electrode.
+Example: Standard hydrogen electrode (SHE)
+➢ Secondary reference electrodes
+These are the electrodes whose potential with respect to SHE are known and are
+commonly used for determination of the electrode potentials of the other electrodes.
+Example: Calomel electrode and Ag/AgCl electrode.
+
+➢Ion-selective electrodes
+Ex: Glass electrode
+
+Construction and working of calomel electrode
+Construction:
+
+➢The calomel electrode consists of narrow inner and outer glass tubes.
+➢The bottom of inner glass tube has a layer of mercury followed by a paste of
+Hg2Cl2.
+➢A platinum wire is dipped into the mercury layer for electrical contact.
+➢The outer glass tube is filled with KCl solution.
+➢KCl solution of different concentration can be used (Molar, Deci molar or
+saturated)
+➢A porous plug (salt bridge) is fitted at the bottom of outer glass tube.
+➢The calomel electrode is represented as , Hg|Hg2Cl2(s)|KCl(aq)
+
+Working:
+The calomel electrode can act as anode or cathode depending on
+the nature of the other electrode of the cell
+When it acts as anode the electrode reaction is,
+2Hg
+Hg22+ + 2eHg22+ + 2ClHg2Cl2
+2Hg + 2ClHg2Cl2 + 2e-
+
+When it acts as cathode the electrode reaction is,
+Hg22+ + 2e2Hg
+Hg2Cl2
+Hg22+ + 2ClHg2Cl2 + 2e2Hg + 2Cl-
+
+The reversible reaction is represented as,
+Hg2Cl2 + 2e-
+
+2Hg + 2Cl-
+
+The electrode potential is given by,
+ECalomel = E0 – 2.303RT log [Hg]2[Cl-]2
+nF
+[Hg2Cl2]
+ECalomel = E0 – 0.0591 log [Cl-]2
+[Hg] = [Hg2Cl2] = 1
+2
+ECalomel = E0 - 0.0591 log [Cl-]
+It is evident from the above equation that the potential of the calomel electrode depends
+on the concentration of the KCl solution.
+Concentration of KCl
+
+E0 Calomel
+
+0.1M
+
+0.33V
+
+1M
+
+0.281V
+
+Saturated
+
+0.242V
+
+Applications:
+➢It is used as secondary reference electrode in the determination of electrode
+potential of any other electrode.
+Example: Determination of Electrode potential of zinc electrode
+To determine the electrode potential of Zn electrode, a zinc rod is dipped in 1 M
+solution of ZnSO4. It is combined with calomel electrode through a voltmeter. The
+deflection of the voltmeter indicates that current is flowing from calomel electrode
+towards zinc electrode, i.e., the electrons are moving from zinc to calomel
+electrode. The zinc electrode acts as an anode and the calomel electrode as
+cathode.
+The cell can be represented as: Zn|ZnSO4(1M)||KCl(sat)|Hg2Cl2|Hg
+Ecell = Ec-Ea
+E0cal > E0Zn [E0cal = 0.242V, E0Zn = -0.76V]
+Ecell = Ecal-EZn
+EZn = Ecal-Ecell
+EZn = 0.242-Ecell
+
+(Ecell is measured potentiometrically using voltmeter)
+
+➢Used as reference electrode(SCE) in potentiometric determination .
+➢Used as reference electrode in PH determination.
+
+Advantages:
+➢It is very handy, compact and easy to transport.
+➢Its potential can remain constant and it can easily be reproduced.
+➢It is easy to construct and maintain.
+➢The cell potential does not vary with temperature.
+
+Ion selective electrode:
+
+Ion selective electrodes are the electrodes that are highly
+selective to certain specific ions present in solution containing mixture
+of ions. The potential developed by such electrode is dependent on the
+concentration of that specific ions present in the solution. It is also
+known as membrane electrode as they are made up of certain
+membrane materials which are sensitive to specific ions.
+Uses:
+➢Determination of concentration of number of cations such as K+ , Ca2+, Mg2+, Ag+,
+Cd2+ , Pb2+,Cu2+ .
+➢Concentration of anions such as NO3 - , CN- , S2- & halide ions.
+➢Determination of pH of a solution.
+➢Concentration of gas using gas sensing electrodes.
+
+Glass electrode
+
+➢It is a type of ion selective electrode
+➢It is made up of glass membrane (silicate glass- Na2O:22%, CaO:6% &
+SiO2:72%. It has low melting point, high electrical conductance & can
+sense hydrogen ions up to pH 9)
+➢It is highly sensitive to H+ ions
+➢The most common application of ion-selective glass electrode is for
+the measurement of pH
+
+Construction of Glass electrode
+
+Platinum wire
+Ordinary glass
+
+0.1M HCl (pH=1)
+
+Ag/AgCl
+Thin glass membrane
+
+The glass electrode consists of a long glass tube with a thin walled bulb at
+the bottom of the glass electrode which is made up of glass membrane as
+shown in figure. The bulb contains 0.1M HCl (internal reference solution). An
+Ag/AgCl electrode (internal reference electrode) is placed in the solution and
+connected by a platinum wire for electrical contact.
+The electrode is represented as
+Ag|AgCl|HCl (0.1M)| Glass
+
+Principle:
+Gel lay er of the
+glass membrane
+
+glass bulb
+
+External analyte
+solution of
+concentration (C2)
+
+H+
+
+H+ H+ H+
+
+Internal solution of
+concentration (C1), [H+]=0.1M
+
+[H+] = ?
+E2 E1
+Eb= E2-E1
+
+• A thin walled glass bulb containing an acid is immersed in another
+solution as shown in the figure. A potential is developed across the glass
+membrane. This is called boundary potential (Eb). The potential is due to
+the difference in potential (E2-E1) developed across the gel layer of the
+glass membrane between two liquids.
+
+𝐸𝑏 = 𝐸2 − 𝐸1
+𝐸𝑏 = 2.303𝑅𝑇 log 𝐶2 − 2.303𝑅𝑇 log 𝐶1
+… … … … … (1)
+nF
+nF
+where C1 & C2 are the concentration of H+ ions of the acid solution
+inside and outside the glass bulb respectively.
+The concentration C1 of the solution inside the bulb is constant. Hence
+second term on the right hand side of the equation (1) is constant.
+Eb = 2.303RT log C2 + Constant
+(n=1)
+F
+Eb = 2.303RT log C2 + K
+where K = -2.303RT log C1
+F
+F
+Eb = K + 0.0591 log C2
+… … … … … (2)
+
+K is a constant which depends upon the pH of the solution taken in
+the bulb and glass electrode assembly.
+
+Since C2 = [H+] of the external analyte solution,
+𝐸𝑏 = 𝐾 + 0.0591log [𝐻+]
+𝐸𝑏 = 𝐾 − 0.0591p𝐻
+
+wkt (−log[𝐻+] = p𝐻)
+
+… … … … … (3)
+
+Working of Glass Electrode
+When the glass electrode is dipped in the test solution, the
+Na+ ions of the glass membrane are exchanged for H+ ions of the test
+solution.
+H+ (soln) + Na+Gl- (glass membrane)
+
+Na+ (soln) + H+Gl-(glass membrane)
+
+The boundary potential established due to the above reaction is
+mainly responsible for the glass electrode potential EG. The potential
+of the glass electrode is given by
+𝐸𝐺 = 𝐸𝑏 + 𝐸𝐴𝑔/𝐴𝑔𝐶𝑙
+
+… … … … … (4)
+
+When two solutions are of the same concentration then C1=C2, Eb=0.
+However it has observed that even when C1=C2 a small potential is
+developed this is called asymmetric potential (Easy). Hence equation
+(4) can be written as
+
+𝐸𝐺 = 𝐸𝑏 + 𝐸𝐴𝑔/𝐴𝑔𝐶𝑙 + 𝐸𝑎𝑠𝑦
+
+… … … … … (5)
+
+𝐸𝐺 = 𝐾 − 0.0591p𝐻 + 𝐸𝐴𝑔/𝐴𝑔𝐶𝑙 + 𝐸𝑎𝑠𝑦
+
+… … … … … (6)
+
+EG = E0G – 0.0591pH
+
+… … … … … (7)
+
+Where E0G = K + 𝐸𝐴𝑔/𝐴𝑔𝐶𝑙 + 𝐸𝑎𝑠𝑦
+
+Advantages:
+➢Glass electrode can be used in the presence of strong oxidizing or
+reducing agents or metal ions.
+➢Not poisoned easily.
+➢Simple to operate
+➢Can be used in portable instruments.
+Disadvantages:
+➢ It is fragile
+➢It cannot be used above pH 12 (alkaline error) as interference from
+sodium ions occurs i.e., sodium ion exchange together with H+ ions
+(glass membrane becomes permeable to sodium).
+➢It cannot be used in presence of dehydrating agents such as Conc.
+H2SO4, ethyl alcohol
+
+Determination of pH of a solution using glass electrode
+The glass electrode is immersed in the solution whose pH is to be
+determined. It is combined with a reference electrode such as a
+calomel electrode through salt bridge.
+Hg/Hg2Cl2/ KCl(sat) //External analyte solution (pH=?)/Glass/HCl (0.1M)/AgCl/Ag
+Voltmeter
+
+Glass electrode
+
+Calomel electrode
+Test solution (pH=?)
+
+The emf of a given cell is measured using an electronic voltmeter.
+
+Emf of the cell is given by
+Ecell = EG − ESCE
+
+(E0G > E0SCE, Glass electrode is cathode and SCE is anode)
+
+Ecell = (E0G − 0.0591pH) - Esce
+pH = E0G - Ecell - Esce
+0.0591
+
+E0G is measured by using a solution of known pH
+ESCE is known (0.242V)
+
+Ecell is measured using voltmeter
+
+
