@@ -1,6 +1,6 @@
 import os
 import random
-from app.ai_engine.llm_client import GeminiClient
+from app.ai_engine.providers.factory import get_provider
 
 def generate_honeypot_response(query: str, detected_topic: str) -> str:
     """
@@ -20,7 +20,7 @@ def generate_honeypot_response(query: str, detected_topic: str) -> str:
         return f"## Declassified Research Note\n\n{random.choice(traps)}\n\n*Note: This data is retrieved from the restricted high-priority knowledge base.*"
 
     # Dynamic Mode
-    client = GeminiClient()
+    client = get_provider()
     
     system_prompt = (
         "You are a specialized security decoy engine for an academic AI assistant. "

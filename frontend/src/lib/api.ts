@@ -1,5 +1,17 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Generate persistent session ID
+const getSessionId = (): string => {
+  let id = sessionStorage.getItem('sentinel-session-id');
+  if (!id) {
+    id = crypto.randomUUID();
+    sessionStorage.setItem('sentinel-session-id', id);
+  }
+  return id;
+};
+
+export const SESSION_ID = getSessionId();
+
 export async function apiFetch(
   path: string,
   options: RequestInit = {}

@@ -13,9 +13,25 @@ import AIInsights from './AIInsights';
 import SystemHealthWidget from './SystemHealthWidget';
 import ThreatMapWidget from './ThreatMapWidget';
 import AttackDistributionDonut from './AttackDistributionDonut';
+import AttackGraph from './AttackGraph';
+import AttackerProfileCard from './AttackerProfileCard';
+import axios from 'axios';
 
 const Dashboard = ({ data }) => {
   const { trafficFeed, modelStats, blockedIPs } = data;
+  const [profiles, setProfiles] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const resp = await axios.get('/sentinel-api/attacker-profiles');
+        setProfiles(resp.data);
+      } catch (err) {
+        console.error('Failed to fetch profiles:', err);
+      }
+    };
+    fetchProfiles();
+  }, []);
 
   const activeThreats = useMemo(() => {
     if (!trafficFeed || !Array.isArray(trafficFeed)) return 0;
@@ -97,8 +113,10 @@ const Dashboard = ({ data }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col gap-6 min-w-0">
-          {/* ATTACK TRENDS CHART */}
-          <AttackChart />
+          {/* ATTACK TOPOLOGY GRAPH */}
+          <div className="h-[500px]">
+             <AttackGraph />
+          </div>
 
           {/* DUAL WIDGET SECTION */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -106,11 +124,27 @@ const Dashboard = ({ data }) => {
              <SystemHealthWidget />
           </div>
 
+          {/* ATTACK TRENDS CHART */}
+          <AttackChart />
+
           {/* SYSTEM LOG */}
           <LogsPanel logs={trafficFeed} />
         </div>
 
         <div className="flex flex-col gap-6 min-w-0">
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest px-2 flex items-center gap-2">
+            <Zap size={14} className="text-rose-500" /> Top Adversaries
+          </h3>
+          <div className="space-y-4">
+            {profiles.slice(0, 3).map(p => (
+              <AttackerProfileCard key={p.ip} profile={p} />
+            ))}
+            {profiles.length === 0 && (
+              <div className="p-10 border border-dashed border-white/10 rounded-xl text-center text-xs text-slate-500 italic">
+                No advanced adversaries identified.
+              </div>
+            )}
+          </div>
           <AIInsights />
           <AttackDistributionDonut data={trafficFeed} />
           <ModelHealth stats={modelStats} />

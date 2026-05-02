@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, History, Share2, ShieldAlert, Play, Download, Loader2, ChevronRight, Eye } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import axios from 'axios';
+import ThreatNarrativeDrawer from './ThreatNarrativeDrawer';
 
 const API_BASE = "/api/v1/forensics";
 
@@ -11,6 +12,7 @@ const ForensicsView = () => {
   const [replayData, setReplayData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [replayLoading, setReplayLoading] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -56,6 +58,11 @@ const ForensicsView = () => {
     }
   };
 
+  const handleExportPdf = async () => {
+    if (!selectedSession) return;
+    window.open(`${API_BASE}/export/pdf/${selectedSession}`, '_blank');
+  };
+
   // Group events by session_id, assigning a fallback for null sessions
   const sessions = Array.from(new Set(events.map(e => e.session_id || `orphan_${e.id}`))).map(sid => {
     const sessionEvents = events.filter(e => (e.session_id || `orphan_${e.id}`) === sid);
@@ -77,6 +84,14 @@ const ForensicsView = () => {
           <p className="text-slate-500 text-sm">Deep session analysis and attack replay narrative.</p>
         </div>
         <div className="flex gap-3">
+          <button 
+            onClick={handleExportPdf}
+            disabled={!selectedSession}
+            className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-lg text-sm text-emerald-400 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Download size={16} />
+            Download PDF Report
+          </button>
           <button 
             onClick={handleExportStix}
             disabled={!selectedSession}
@@ -131,12 +146,22 @@ const ForensicsView = () => {
 
         <div className="md:col-span-2 flex flex-col gap-6">
            <GlassCard className="p-6 border-l-4 border-primary bg-primary/5 min-h-[200px]">
-              <div className="flex items-center justify-between mb-4">
+               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-white flex items-center gap-2">
                   <ShieldAlert size={18} className="text-primary" />
                   Forensic Narrative
                 </h3>
-                {replayLoading && <Loader2 size={16} className="animate-spin text-primary" />}
+                <div className="flex items-center gap-3">
+                  {replayLoading && <Loader2 size={16} className="animate-spin text-primary" />}
+                  {replayData && (
+                    <button 
+                      onClick={() => setShowAnalysis(true)}
+                      className="px-3 py-1 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-md text-[10px] font-bold text-primary uppercase tracking-wider transition-all"
+                    >
+                      Deep AI Analysis
+                    </button>
+                  )}
+                </div>
               </div>
               
               {replayData ? (
@@ -162,6 +187,12 @@ const ForensicsView = () => {
                 </div>
               )}
            </GlassCard>
+
+           <ThreatNarrativeDrawer 
+             sessionId={selectedSession} 
+             isOpen={showAnalysis} 
+             onClose={() => setShowAnalysis(false)} 
+           />
 
            <GlassCard className="p-6 flex-1 min-h-[300px]">
               <h3 className="font-bold text-white mb-6 flex items-center gap-2">

@@ -1,13 +1,40 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { useTrafficPolling } from '../hooks/useTrafficPolling';
+import useWebSocketFeed from '../hooks/useWebSocketFeed';
 import LiveIndicator from './LiveIndicator';
 import TrafficRow from './TrafficRow';
 import TrafficDrawer from './TrafficDrawer';
-import { Activity, Pause, Play, Search, Filter } from 'lucide-react';
+import { Activity, Pause, Play, Search, Filter, RefreshCw } from 'lucide-react';
 
 const TrafficFeed = () => {
-  const { trafficFeed, isLive } = useTrafficPolling();
+  const [trafficFeed, setTrafficFeed] = useState([]);
+  
+  // Real-time updates via WebSocket
+  const { isConnected } = useWebSocketFeed((newLog) => {
+    setTrafficFeed((prev) => {
+      // Deduplicate by ID
+      if (prev.some(item => item.id === newLog.id)) return prev;
+      return [newLog, ...prev].slice(0, 500); // Keep last 500
+    });
+  });
+
+  // Initial fetch
+  useEffect(() => {
+    const fetchInitial = async () => {
+      try {
+        const resp = await fetch('/sentinel-api/traffic-feed');
+        if (resp.ok) {
+          const data = await resp.json();
+          setTrafficFeed(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch initial traffic:', err);
+      }
+    };
+    fetchInitial();
+  }, []);
+  
+  const isLive = isConnected;
   
   const [isPaused, setIsPaused] = useState(false);
   const [frozenFeed, setFrozenFeed] = useState([]);
@@ -55,6 +82,18 @@ const TrafficFeed = () => {
           </div>
           <div className="flex items-center gap-3">
              <LiveIndicator isLive={isLive && !isPaused} />
+             <button 
+               onClick={async () => {
+                 if (confirm('Are you sure you want to reset all demo intelligence data?')) {
+                   await fetch('/api/v1/demo/reset');
+                   window.location.reload();
+                 }
+               }}
+               className="p-2 rounded-lg border border-rose-500/20 bg-rose-500/5 text-rose-500 hover:bg-rose-500/10 transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
+             >
+               <RefreshCw size={12} />
+               Reset Intelligence
+             </button>
              <button 
                onClick={handlePauseToggle}
                className={`p-2 rounded-lg border shadow-sm transition-all flex items-center gap-2 text-sm font-bold ${

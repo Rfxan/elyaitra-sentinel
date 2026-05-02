@@ -9,7 +9,7 @@ import json
 
 from app.db.database import get_db
 from app.models.redteam import RedTeamSession
-from app.ai_engine.llm_client import GeminiClient
+from app.ai_engine.providers.factory import get_provider
 
 router = APIRouter(prefix="/redteam", tags=["Red Team Playground"])
 
@@ -92,7 +92,7 @@ async def submit_redteam_query(payload: dict, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Session not found")
         
     # Analyze the query for CTF success
-    client = GeminiClient()
+    client = get_provider()
     
     judge_prompt = (
         "You are an automated CTF judge for a red teaming playground.\n"

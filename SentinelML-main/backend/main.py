@@ -5,7 +5,7 @@ import uuid
 import random
 import numpy as np
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from collections import deque
@@ -34,19 +34,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Telegram Push Notifications
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+_telegram_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
+_telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", "")
 
 async def send_telegram_alert(message: str):
     """Send a push notification via Telegram Bot API."""
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+    global _telegram_token, _telegram_chat_id
+    if not _telegram_token or not _telegram_chat_id:
         return
     try:
         async with httpx.AsyncClient() as client:
             await client.post(
-                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                f"https://api.telegram.org/bot{_telegram_token}/sendMessage",
                 json={
-                    "chat_id": TELEGRAM_CHAT_ID,
+                    "chat_id": _telegram_chat_id,
                     "text": message,
                     "parse_mode": "Markdown"
                 },
@@ -56,6 +57,13 @@ async def send_telegram_alert(message: str):
         logger.warning(f"Telegram alert failed: {e}")
 
 app = FastAPI(title="SentinelML Backend")
+
+@app.post("/config/telegram")
+async def set_telegram_config(data: dict):
+    global _telegram_token, _telegram_chat_id
+    _telegram_token = data.get("token", _telegram_token)
+    _telegram_chat_id = data.get("chat_id", _telegram_chat_id)
+    return {"status": "updated", "chat_id_active": bool(_telegram_chat_id)}
 
 app.add_middleware(
     CORSMiddleware,
@@ -109,6 +117,43 @@ stats = {
     "poisoning_caught": 0,
     "start_time": time.time()
 }
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: dict):
+        dead_connections = []
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(message)
+            except Exception:
+                dead_connections.append(connection)
+        
+        for connection in dead_connections:
+            self.disconnect(connection)
+
+manager = ConnectionManager()
+
+@app.websocket("/ws/threats")
+async def websocket_threats(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Keep connection alive
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception:
+        manager.disconnect(websocket)
 
 # Schemas
 class PredictRequest(BaseModel):
@@ -260,6 +305,15 @@ async def ingest_event(payload: ElyaitraEventPayload):
         )
         if is_blocked:
             extraction_detector.honeypot_ips.add(payload.ip)
+        
+        if payload.confidence > 0.85:
+            await send_telegram_alert(
+                f"🛡️ *Elyaitra Security Alert*\n"
+                f"Type: `{payload.type}`\n"
+                f"IP: `{payload.ip}` | Path: `{payload.path}`\n"
+                f"Status: {'🔴 BLOCKED' if is_blocked else '🟡 FLAGGED'}\n"
+                f"Session: `{payload.session_id}`"
+            )
 
     mitre_id = payload.mitre_tags[0] if payload.mitre_tags else "T1190"
     mitre_name = payload.description if payload.description else "Exploit Public-Facing Application"
@@ -309,6 +363,7 @@ async def ingest_event(payload: ElyaitraEventPayload):
 
     traffic_feed.appendleft(event)
     incident_engine.update(event)
+    await manager.broadcast(event)
     log_event({"event": "ingest_event", "ip": payload.ip, "type": event_type, "label": payload.type})
 
     # 🏛️ Task 13: Write flagged events to attack_events table
@@ -501,6 +556,7 @@ async def predict(req: PredictRequest):
     }
     incident_engine.update(event)
     traffic_feed.appendleft(event)
+    await manager.broadcast(event)
     log_event({"event": "predict", "ip": req.ip, "type": event_type, "label": pred_label})
 
     stats["total_predictions"] += 1
@@ -692,6 +748,15 @@ async def get_attacker_profiles_endpoint():
             if z_scores[-1] > z_scores[0]:
                 pattern = "Escalating Evasion Pattern"
 
+        # Calculate risk score
+        avg_conf = sum([e["confidence_score"] for e in events]) / len(events) if events else 0
+        risk_score = min(100, len(events) * 10 + avg_conf * 50)
+        
+        threat_level = "LOW"
+        if risk_score > 80: threat_level = "CRITICAL"
+        elif risk_score > 60: threat_level = "HIGH"
+        elif risk_score > 40: threat_level = "MEDIUM"
+
         profiles.append({
             "ip": ip,
             "total_strikes": len(blocker.strikes.get(ip, [])),
@@ -700,7 +765,9 @@ async def get_attacker_profiles_endpoint():
             "first_seen": p["first_seen"],
             "last_seen": p["last_seen"],
             "events": events,
-            "behaviour_pattern": pattern
+            "behaviour_pattern": pattern,
+            "risk_score": round(risk_score, 1),
+            "threat_level": threat_level
         })
     return profiles
 

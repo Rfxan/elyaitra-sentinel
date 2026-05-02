@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ChevronRight, ShieldCheck, ShieldAlert, Activity, Sun, Moon, Play, RefreshCw, Check } from 'lucide-react';
+import { ChevronRight, ShieldCheck, ShieldAlert, Activity, Sun, Moon, Play, RefreshCw, Check, Menu } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import axios from 'axios';
 
 const API_BASE = "/sentinel-api";
 
-const Topbar = ({ isLive, theme, setTheme, activeItem, setActiveItem }) => {
+const Topbar = ({ isLive, theme, setTheme, activeItem, setActiveItem, setIsMobileOpen }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [demoState, setDemoState] = useState('idle'); // 'idle' | 'running' | 'complete'
 
@@ -20,19 +20,13 @@ const Topbar = ({ isLive, theme, setTheme, activeItem, setActiveItem }) => {
   const handleRunDemo = async () => {
     setDemoState('running');
     try {
-      // Step 1: Blitz (25 events)
-      await axios.post(`${API_BASE}/simulate`, { mode: 'blitz', count: 25 });
-      
-      // Wait 3 seconds
-      await new Promise(r => setTimeout(r, 3000));
-      
-      // Step 2: Evasion (10 events)
-      await axios.post(`${API_BASE}/simulate`, { mode: 'evasion', count: 10 });
+      // Use the new demo seeding endpoint
+      await axios.get('/api/v1/demo/seed');
       
       setDemoState('complete');
-      setTimeout(() => setDemoState('idle'), 5000);
+      setTimeout(() => setDemoState('idle'), 3000);
     } catch (err) {
-      console.error("Demo failed:", err);
+      console.error("Seeding failed:", err);
       setDemoState('idle');
     }
   };
@@ -40,6 +34,12 @@ const Topbar = ({ isLive, theme, setTheme, activeItem, setActiveItem }) => {
   return (
     <header className="h-16 bg-[#0b1120] border-b border-white/5 flex items-center justify-between px-6 sticky top-0 z-30">
       <div className="flex items-center gap-6">
+        <button 
+          onClick={() => setIsMobileOpen(true)}
+          className="lg:hidden p-2 -ml-2 rounded-lg text-slate-400 hover:bg-white/5"
+        >
+          <Menu size={20} />
+        </button>
         <div className="flex items-center gap-2">
            <img src="/logo.png" alt="Elyaitra" className="w-8 h-8 rounded-lg shadow-[0_0_15px_rgba(34,211,238,0.4)]" />
            <span className="font-black text-xl text-white tracking-tighter">ELY<span className="text-primary">AITRA</span></span>

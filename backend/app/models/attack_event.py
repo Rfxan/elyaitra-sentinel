@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
 from app.db.database import Base
 from datetime import datetime
 
@@ -14,3 +14,4 @@ class AttackEvent(Base):
     honeypot_served = Column(String(20)) # static | dynamic | None
     response_snippet = Column(Text)
     session_id = Column(String(100), index=True)
+    is_demo_seed = Column(Boolean, default=False)

@@ -40,7 +40,7 @@ const navItems = [
 ];
 
 
-const Sidebar = ({ activeItem, setActiveItem, isCollapsed, setIsCollapsed }) => {
+const Sidebar = ({ activeItem, setActiveItem, isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
   const toggleSidebar = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
@@ -48,28 +48,48 @@ const Sidebar = ({ activeItem, setActiveItem, isCollapsed, setIsCollapsed }) => 
   };
 
   return (
-    <aside 
-      className={`bg-[#0b1120] dark:bg-[#0b1120] h-screen fixed left-0 top-0 border-r border-white/10 flex flex-col z-40 transition-all duration-300 ease-in-out
-        ${isCollapsed ? 'w-20' : 'w-64'}
-      `}
-    >
-      {/* Brand */}
-      <div className={`h-16 px-5 flex items-center justify-between border-b border-white/10 ${isCollapsed ? 'px-0 justify-center' : ''}`}>
-        {!isCollapsed && (
-          <div className="flex items-center gap-3">
-             <ShieldCheck size={20} className="text-primary" />
-             <span className="font-bold text-lg text-white tracking-tight">Sentinel<span className="text-primary">ML</span></span>
+    <>
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[45] lg:hidden" 
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+      
+      <aside 
+        className={`bg-[#0b1120] dark:bg-[#0b1120] h-screen fixed left-0 top-0 border-r border-white/10 flex flex-col z-[50] transition-all duration-300 ease-in-out
+          ${isCollapsed ? 'w-20' : 'w-64'}
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
+        {/* Brand */}
+        <div className={`h-16 px-5 flex items-center justify-between border-b border-white/10 ${isCollapsed ? 'px-0 justify-center' : ''}`}>
+          {!isCollapsed && (
+            <div className="flex items-center gap-3">
+               <ShieldCheck size={20} className="text-primary" />
+               <span className="font-bold text-lg text-white tracking-tight">Sentinel<span className="text-primary">ML</span></span>
+            </div>
+          )}
+          {isCollapsed && <ShieldCheck size={24} className="text-primary" />}
+          
+          <div className="flex items-center">
+            {isMobileOpen && (
+              <button 
+                onClick={() => setIsMobileOpen(false)}
+                className="lg:hidden p-1.5 rounded-lg hover:bg-white/5 text-slate-400"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+            <button 
+              onClick={toggleSidebar}
+              className="hidden lg:block p-1.5 rounded-lg hover:bg-white/5 text-slate-400 transition-colors"
+            >
+              {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            </button>
           </div>
-        )}
-        {isCollapsed && <ShieldCheck size={24} className="text-primary" />}
-        
-        <button 
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 transition-colors"
-        >
-          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </button>
-      </div>
+        </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto scrollbar-thin py-6 px-3 space-y-0.5">
@@ -114,7 +134,8 @@ const Sidebar = ({ activeItem, setActiveItem, isCollapsed, setIsCollapsed }) => 
             )}
          </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

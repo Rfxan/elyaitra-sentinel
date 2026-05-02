@@ -12,9 +12,13 @@ This version comes integrated with **SentinelML**, an advanced adversarial-robus
 - ❗ **Clear “Not in Syllabus” Responses**: Direct feedback when topics are outside the scope.
 - 🔍 **Fast Semantic Search**: High-performance RAG using Google Gemini & ChromaDB.
 - 🛡️ **SentinelML Security Integration**:
-  - Real-time threat detection for AI endpoints.
-  - Global IP blocking & Honeypot traps for malicious actors.
-  - Adversarially robust ML models.
+  - **Real-time Threat Feed**: WebSocket-driven live ingestion with zero-latency updates.
+  - **D3 Attack Topology**: Interactive force-directed graph of adversary relationships.
+  - **AI Forensic Analysis**: Automated forensic narratives and MITRE mapping using LLMs.
+  - **Deception Engine**: Adaptive honeypots (Static/Dynamic) for active threat mitigation.
+  - **Telegram Push Alerts**: Immediate notifications for high-confidence intrusions.
+  - **Forensic PDF Export**: Automated generation of professional incident reports.
+  - **Attacker Fingerprinting**: Behavioral risk scoring and threat level classification.
 
 ---
 

@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.security.logger import send_log
 import time
 
+START_TIME = time.time()
+
 import os
 import logging
 import warnings
@@ -32,6 +34,7 @@ from app.routers.forensics import router as forensics_router
 from app.routers.redteam import router as redteam_router
 from app.api.integrity import router as integrity_router
 from app.routers.rooms import router as rooms_router
+from app.routers.demo import router as demo_router
 
 from app.db.init_db import init_db
 
@@ -198,6 +201,7 @@ app.include_router(forensics_router, prefix=API_PREFIX)
 app.include_router(redteam_router, prefix=API_PREFIX)
 app.include_router(integrity_router, prefix=API_PREFIX)
 app.include_router(rooms_router, prefix=API_PREFIX)
+app.include_router(demo_router, prefix=API_PREFIX)
 
 @app.get("/health")
 def health_check():

@@ -18,6 +18,12 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/sentinel-api/, ''),
       },
+      '/ws': {
+        target: 'ws://localhost:8003',
+        ws: true,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ws/, ''),
+      },
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),

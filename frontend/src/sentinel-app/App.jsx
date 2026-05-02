@@ -53,9 +53,15 @@ function MainApp() {
   const [isCollapsed, setIsCollapsed] = useState(
     localStorage.getItem('sidebar-collapsed') === 'true'
   );
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [theme, setTheme] = useState(
     localStorage.getItem('theme') || 'dark'
   );
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [activeItem]);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -65,6 +71,36 @@ function MainApp() {
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Hotkey combo tracker (e.g. G then D)
+      if (e.key === 'g' || e.key === 'G') {
+        const nextKeyHandler = (ne) => {
+          if (ne.key === 'd' || ne.key === 'D') setActiveItem('Dashboards');
+          if (ne.key === 'f' || ne.key === 'F') setActiveItem('Forensics');
+          if (ne.key === 't' || ne.key === 'T') setActiveItem('Threat Feed');
+          window.removeEventListener('keydown', nextKeyHandler);
+        };
+        window.addEventListener('keydown', nextKeyHandler, { once: true });
+        setTimeout(() => window.removeEventListener('keydown', nextKeyHandler), 1000);
+      }
+      
+      // Global Search shortcut Ctrl+K
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setActiveItem('Threat Feed');
+        // Small delay to allow component mount if needed
+        setTimeout(() => {
+          const searchInput = document.querySelector('input[placeholder*="Search IP"]');
+          if (searchInput) searchInput.focus();
+        }, 100);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const globalDataStr = useAlerts();
 
@@ -77,16 +113,19 @@ function MainApp() {
         setActiveItem={setActiveItem} 
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
+        isMobileOpen={isMobileOpen}
+        setIsMobileOpen={setIsMobileOpen}
       />
 
       {/* Main Content wrapper */}
-      <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'} flex flex-col relative min-h-screen min-w-0`}>
+      <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} flex flex-col relative min-h-screen min-w-0`}>
         <Topbar 
           isLive={globalDataStr.isLive} 
           theme={theme} 
           setTheme={setTheme} 
           activeItem={activeItem} 
           setActiveItem={setActiveItem} 
+          setIsMobileOpen={setIsMobileOpen}
         />
 
         <main className="flex-1 p-6 relative flex flex-col bg-slate-50 dark:bg-[#0b1120] min-w-0 overflow-x-hidden">
