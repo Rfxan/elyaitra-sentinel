@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Target, Sword, Brain, Trophy, ChevronRight, Loader2, Sparkles, ShieldAlert } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import axios from 'axios';
+import VoiceInput from './VoiceInput';
 
 const API_BASE = "/api/v1/redteam";
 
@@ -13,6 +14,12 @@ const RedTeamView = () => {
   const [isExecuting, setIsExecuting] = useState(false);
   const [logs, setLogs] = useState([]);
   const [score, setScore] = useState(0);
+  const [isTTSEnabled, setIsTTSEnabled] = useState(false);
+
+  // Handle voice transcript — populate input field
+  const handleVoiceTranscript = useCallback((text) => {
+    setPromptInput(prev => (prev ? prev + ' ' + text : text));
+  }, []);
   
   const [sessionHistory, setSessionHistory] = useState(() => {
     try {
@@ -72,13 +79,23 @@ const RedTeamView = () => {
       const pts = data.score || 0;
       const dangerScore = data.danger_score || 0;
 
+      const resultLine = wasSuccess
+        ? `CHALLENGE SOLVED: ${reason}`
+        : `BLOCKED: ${reason}`;
+
       setLogs(prev => [
         ...prev, 
-        wasSuccess 
-          ? `✅ CHALLENGE SOLVED: ${reason}` 
-          : `❌ BLOCKED: ${reason}`,
+        wasSuccess ? `✅ ${resultLine}` : `❌ ${resultLine}`,
         `// Score: ${pts} | Danger: ${dangerScore}/100`
       ]);
+
+      // TTS readback if enabled
+      if (isTTSEnabled && typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(resultLine);
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
       
       setScore(pts);
       setPromptInput('');
@@ -190,6 +207,11 @@ const RedTeamView = () => {
                    placeholder={session ? "Enter your adversarial prompt..." : "Start a session to begin..."}
                    disabled={!session || isExecuting}
                    className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
+                 />
+                 <VoiceInput
+                   onTranscript={handleVoiceTranscript}
+                   isTTSEnabled={isTTSEnabled}
+                   setTTSEnabled={setIsTTSEnabled}
                  />
                  <button 
                    onClick={handleSubmit}

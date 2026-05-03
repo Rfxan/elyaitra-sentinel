@@ -188,3 +188,65 @@ def get_redteam_status(session_id: str, db: Session = Depends(get_db)):
         "status": session.status,
         "start_time": session.start_time
     }
+
+
+# ── Task 28: POST /redteam/attack (alias for /submit with sandbox=true semantics) ──
+class AttackPayload(BaseModel):
+    attack_type: str
+    custom_prompt: str
+    sandbox: Optional[bool] = True
+
+@router.post("/attack")
+async def run_attack(payload: AttackPayload, db: Session = Depends(get_db)):
+    """
+    Sandbox attack endpoint. Routes the custom_prompt through SentinelML-style 
+    detection simulation and returns full telemetry. 
+    Does NOT pollute real attack_events (sandbox=true by default).
+    """
+    start_ms = int(time.time() * 1000)
+    query = payload.custom_prompt
+    attack_type = payload.attack_type
+
+    # Classification heuristics
+    from app.security.logger import classify_elyaitra_request
+    classification = classify_elyaitra_request("POST", "/ai/tutor", query)
+    was_detected = classification.get("type") in {"RAG_INJECTION", "RAG_RECON", "RAG_PROBE"}
+    confidence = 0.92 if was_detected else round(random.uniform(0.05, 0.35), 2)
+    
+    MITRE_MAP = {
+        "prompt_injection": "T1059.006",
+        "enumeration": "T1046",
+        "jailbreak": "T1078",
+        "data_exfiltration": "T1530",
+        "reconnaissance": "T1595",
+    }
+    mitre_technique = MITRE_MAP.get(attack_type, "T1190")
+
+    detection_layer = None
+    if was_detected:
+        detection_layer = "RAG Filter" if classification.get("type") == "RAG_INJECTION" else "SentinelML"
+
+    score = int(confidence * 100)
+    elapsed_ms = int(time.time() * 1000) - start_ms
+
+    # Explainability snippet
+    client = get_provider()
+    try:
+        exp_prompt = (
+            f"In one sentence, explain why the query '{query[:100]}' "
+            f"was {'detected as' if was_detected else 'not flagged as'} a {attack_type} attack."
+        )
+        explanation = client.generate(exp_prompt)
+    except Exception:
+        explanation = f"Query pattern matches {attack_type} signature (MITRE {mitre_technique})."
+
+    return {
+        "was_detected": was_detected,
+        "detection_confidence": confidence,
+        "mitre_technique": mitre_technique,
+        "which_layer_caught_it": detection_layer,
+        "time_to_detect_ms": elapsed_ms,
+        "explainability_snippet": explanation,
+        "score": score,
+        "sandbox": payload.sandbox,
+    }
