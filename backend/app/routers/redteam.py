@@ -10,8 +10,19 @@ import json
 from app.db.database import get_db
 from app.models.redteam import RedTeamSession
 from app.ai_engine.providers.factory import get_provider
+from pydantic import BaseModel
+from typing import Optional
+
+class StartSessionPayload(BaseModel):
+    challenge_id: str
+
+class RedteamQueryPayload(BaseModel):
+    session_id: str
+    challenge_id: str
+    prompt: str
 
 router = APIRouter(prefix="/redteam", tags=["Red Team Playground"])
+
 
 CHALLENGES = [
     {
@@ -66,7 +77,7 @@ def get_attack_types():
     ]
 
 @router.post("/start")
-def start_redteam_session(db: Session = Depends(get_db)):
+def start_redteam_session(payload: StartSessionPayload, db: Session = Depends(get_db)):
     session_id = f"rt_{uuid.uuid4().hex[:8]}"
     new_session = RedTeamSession(
         session_id=session_id,
@@ -83,9 +94,9 @@ def start_redteam_session(db: Session = Depends(get_db)):
     }
 
 @router.post("/submit")
-async def submit_redteam_query(payload: dict, db: Session = Depends(get_db)):
-    session_id = payload.get("session_id")
-    query = payload.get("query")
+async def submit_redteam_query(payload: RedteamQueryPayload, db: Session = Depends(get_db)):
+    session_id = payload.session_id
+    query = payload.prompt
     
     session = db.query(RedTeamSession).filter(RedTeamSession.session_id == session_id).first()
     if not session:

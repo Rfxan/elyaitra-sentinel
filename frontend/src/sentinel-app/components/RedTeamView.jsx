@@ -13,6 +13,12 @@ const RedTeamView = () => {
   const [isExecuting, setIsExecuting] = useState(false);
   const [logs, setLogs] = useState([]);
   const [score, setScore] = useState(0);
+  
+  const [sessionHistory, setSessionHistory] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('redteam-history') || '[]');
+    } catch { return []; }
+  });
 
   useEffect(() => {
     fetchChallenges();
@@ -31,9 +37,18 @@ const RedTeamView = () => {
   const handleStartSession = async (challenge) => {
     setActiveChallenge(challenge);
     try {
-      const res = await axios.post(API_BASE + '/start');
+      const res = await axios.post(API_BASE + '/start', { challenge_id: challenge.id });
       setSession(res.data);
       setLogs([`// Session ${res.data.session_id} initialized`, `// Target: ${challenge.title}`]);
+      
+      const newHistory = [{
+        id: res.data.session_id,
+        challenge: challenge.title,
+        date: new Date().toLocaleDateString(),
+        score: 0
+      }, ...sessionHistory].slice(0, 10);
+      setSessionHistory(newHistory);
+      localStorage.setItem('redteam-history', JSON.stringify(newHistory));
     } catch (err) {
       console.error("Failed to start session", err);
     }
@@ -47,7 +62,8 @@ const RedTeamView = () => {
     try {
       const res = await axios.post(API_BASE + '/submit', {
         session_id: session.session_id,
-        query: promptInput
+        challenge_id: activeChallenge.id,
+        prompt: promptInput
       });
       
       const data = res.data;
@@ -66,6 +82,12 @@ const RedTeamView = () => {
       
       setScore(pts);
       setPromptInput('');
+      
+      setSessionHistory(prev => {
+        const updated = prev.map(h => h.id === session.session_id ? { ...h, score: pts } : h);
+        localStorage.setItem('redteam-history', JSON.stringify(updated));
+        return updated;
+      });
     } catch (err) {
       console.error("Submission failed", err);
       setLogs(prev => [...prev, `⚠️ Error: ${err.message}`]);
@@ -115,6 +137,25 @@ const RedTeamView = () => {
                </GlassCard>
              );
            })}
+            
+            <div className="mt-8">
+               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-2 px-1">Session History</h3>
+               {sessionHistory.length === 0 ? (
+                 <div className="text-sm text-slate-500 px-1 italic">No previous sessions</div>
+               ) : (
+                 <div className="space-y-2">
+                   {sessionHistory.map(h => (
+                     <div key={h.id} className="text-xs flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
+                       <div className="flex flex-col gap-1">
+                         <span className="text-slate-300 font-bold">{h.challenge}</span>
+                         <span className="text-slate-500 text-[10px]">{h.date} - {h.id.slice(0, 8)}...</span>
+                       </div>
+                       <span className="text-primary font-bold">{h.score}pts</span>
+                     </div>
+                   ))}
+                 </div>
+               )}
+            </div>
         </div>
 
         <div className="lg:col-span-8 flex flex-col gap-6">

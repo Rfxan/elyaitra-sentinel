@@ -3,6 +3,16 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 import json
 from datetime import datetime
+from pydantic import BaseModel
+
+class ExportPayload(BaseModel):
+    session_id: str
+
+class AnalyzePayload(BaseModel):
+    session_id: str
+
+class StixPayload(BaseModel):
+    session_id: str
 
 from app.db.database import get_db
 from app.models.attack_event import AttackEvent
@@ -61,8 +71,8 @@ def replay_session(session_id: str, db: Session = Depends(get_db)):
     }
 
 @router.post("/export")
-def export_session(payload: dict, db: Session = Depends(get_db)):
-    session_id = payload.get("session_id")
+def export_session(payload: ExportPayload, db: Session = Depends(get_db)):
+    session_id = payload.session_id
     if not session_id:
         raise HTTPException(status_code=400, detail="session_id required in payload")
         
@@ -93,9 +103,9 @@ def export_session(payload: dict, db: Session = Depends(get_db)):
     }
 
 @router.post("/analyze")
-def analyze_session_events(payload: dict, db: Session = Depends(get_db)):
+def analyze_session_events(payload: AnalyzePayload, db: Session = Depends(get_db)):
     """Deep AI analysis of a session's attack sequence."""
-    session_id = payload.get("session_id")
+    session_id = payload.session_id
     if not session_id:
         raise HTTPException(status_code=400, detail="session_id required")
         
@@ -146,8 +156,8 @@ def analyze_session_events(payload: dict, db: Session = Depends(get_db)):
         }
 
 @router.post("/export/stix")
-def export_stix_bundle(payload: dict, db: Session = Depends(get_db)):
-    session_id = payload.get("session_id")
+def export_stix_bundle(payload: StixPayload, db: Session = Depends(get_db)):
+    session_id = payload.session_id
     if not session_id:
         raise HTTPException(status_code=400, detail="session_id required")
         

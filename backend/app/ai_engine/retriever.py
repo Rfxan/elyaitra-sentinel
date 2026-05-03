@@ -49,7 +49,7 @@ def tokenize(text: str) -> list[str]:
     """Simple tokenizer for BM25."""
     return text.lower().replace("-", " ").replace("+", " ").split()
 
-def retrieve(question: str, subject: str, unit: int | None = None, k: int | None = None):
+def retrieve(question: str, subject: str, unit: int | None = None, k: int | None = None, collection_name: str | None = None):
     try:
         if k is None:
             k = config.FINAL_RETRIEVAL_K
@@ -59,8 +59,10 @@ def retrieve(question: str, subject: str, unit: int | None = None, k: int | None
         # 0. Query Expansion
         queries = _expand_query(question) if config.QUERY_EXPANSION_ENABLED else [question]
         
-        print(f"🔍 RETRIEVER | subject={subject} | queries={len(queries)} | k={k}")
-        collection = get_collection(subject)
+        # Use namespace override if provided (GAP-2: room isolation)
+        coll_name = collection_name if collection_name else subject
+        print(f"🔍 RETRIEVER | collection={coll_name} | queries={len(queries)} | k={k}")
+        collection = get_collection(coll_name)
         # Optimize Quote: Use embed_documents to get all embeddings in ONE request
         all_embeddings = embedding_model.embed_documents(queries)
         

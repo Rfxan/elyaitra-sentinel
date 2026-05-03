@@ -12,3 +12,4 @@ class UserRequest(Base):
     query_text = Column(Text, nullable=True)
     path = Column(String(200))
     ip = Column(String(50))
+    session_id = Column(String(100), nullable=True, index=True)

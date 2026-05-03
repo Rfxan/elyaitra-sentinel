@@ -10,6 +10,7 @@ class Room(Base):
     syllabus_id = Column(Integer, index=True)
     created_by = Column(Integer, index=True) # user_id
     shared_token = Column(String(50), unique=True, index=True)
+    chroma_namespace = Column(String(100), unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class RoomMessage(Base):

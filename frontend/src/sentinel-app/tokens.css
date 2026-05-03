@@ -1,0 +1,12 @@
+:root {
+  --bg-primary: #0F1923;
+  --accent: #00D4FF;
+  --success: #00FF88;
+  --warning: #FFB800;
+  --danger: #FF3B5C;
+  --text-primary: #C9D1D9;
+  --text-muted: #8B949E;
+  --border: rgba(255,255,255,0.08);
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}

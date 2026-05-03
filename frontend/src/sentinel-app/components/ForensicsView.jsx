@@ -13,10 +13,15 @@ const ForensicsView = () => {
   const [loading, setLoading] = useState(true);
   const [replayLoading, setReplayLoading] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [playbackIndex, setPlaybackIndex] = useState(-1);
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (replayData) setPlaybackIndex(replayData.events.length);
+  }, [replayData]);
 
   const fetchEvents = async () => {
     try {
@@ -219,8 +224,25 @@ const ForensicsView = () => {
                     Sequential event log will appear here...
                  </div>
               ) : (
-                <div className="space-y-4 animate-fade-in">
-                   {replayData.events.map((e, idx) => (
+                <div className="flex flex-col h-full animate-fade-in">
+                   {replayData.events.length > 0 && (
+                     <div className="mb-6 bg-white/5 p-4 rounded-xl border border-white/10">
+                       <div className="flex justify-between text-[10px] text-primary font-bold uppercase tracking-widest mb-2">
+                         <span>Event 1</span>
+                         <span>Playback: {playbackIndex === -1 ? replayData.events.length : playbackIndex} / {replayData.events.length}</span>
+                       </div>
+                       <input 
+                         type="range" 
+                         min="1" 
+                         max={replayData.events.length} 
+                         value={playbackIndex === -1 ? replayData.events.length : playbackIndex}
+                         onChange={(e) => setPlaybackIndex(Number(e.target.value))}
+                         className="w-full accent-primary bg-white/10 rounded-lg appearance-none h-1.5 cursor-pointer"
+                       />
+                     </div>
+                   )}
+                   <div className="space-y-4 flex-1 overflow-y-auto pr-2 scrollbar-thin">
+                   {replayData.events.slice(0, playbackIndex === -1 ? replayData.events.length : playbackIndex).map((e, idx) => (
                       <div key={idx} className="flex gap-4">
                          <div className="flex flex-col items-center">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border 
@@ -245,6 +267,7 @@ const ForensicsView = () => {
                          </div>
                       </div>
                    ))}
+                   </div>
                 </div>
               )}
            </GlassCard>

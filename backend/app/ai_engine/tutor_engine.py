@@ -32,7 +32,8 @@ class TutorEngine:
         unit: str,
         topic: str,
         mode: str,
-        message: str
+        message: str,
+        collection_name: str | None = None
     ) -> Dict[str, List[str] | str]:
 
         # --------------------
@@ -50,7 +51,8 @@ class TutorEngine:
         docs = retrieve(
             question=query,
             subject=subject,
-            unit=unit
+            unit=unit,
+            collection_name=collection_name
         )
 
         # --------------------
