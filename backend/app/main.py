@@ -2,8 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.security.logger import send_log
 import time
-
-START_TIME = time.time()
+from app.core.state import START_TIME
 
 import os
 import logging

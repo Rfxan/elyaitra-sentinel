@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldAlert, Target, Zap, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import axios from 'axios';
 
+// BUG-10: Wrapped in createPortal so it renders at document.body,
+// avoiding clipping by overflow:hidden or transform ancestors.
 const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,6 +14,8 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
     if (isOpen && sessionId) {
       fetchAnalysis();
     }
+    // Reset when closed
+    if (!isOpen) setAnalysis(null);
   }, [isOpen, sessionId]);
 
   const fetchAnalysis = async () => {
@@ -32,7 +37,7 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
     'LOW': 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30'
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -58,7 +63,7 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
                 </h3>
                 <p className="text-[10px] text-slate-500 uppercase font-mono tracking-widest mt-1">SESSION: {sessionId}</p>
               </div>
-              <button 
+              <button
                 onClick={onClose}
                 className="p-2 rounded-lg hover:bg-white/5 text-slate-400 transition-colors"
               >
@@ -81,7 +86,7 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
               ) : analysis ? (
                 <div className="animate-fade-in space-y-8">
                   {/* Severity Banner */}
-                  <div className={`p-4 rounded-xl border flex items-center justify-between ${severityColor[analysis.severity]}`}>
+                  <div className={`p-4 rounded-xl border flex items-center justify-between ${severityColor[analysis.severity] || severityColor['MEDIUM']}`}>
                     <div className="flex items-center gap-3">
                       <AlertTriangle size={24} />
                       <div>
@@ -97,7 +102,7 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
                       <Zap size={14} className="text-amber-400" /> Executive Summary
                     </h4>
                     <p className="text-slate-300 text-sm leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5 italic">
-                      "{analysis.summary}"
+                      &ldquo;{analysis.summary}&rdquo;
                     </p>
                   </section>
 
@@ -113,9 +118,9 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
 
                   {/* TTPs */}
                   <section>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">TTPs & MITRE Mapping</h4>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">TTPs &amp; MITRE Mapping</h4>
                     <div className="flex flex-wrap gap-2">
-                      {analysis.mitre_techniques.map((t, i) => (
+                      {(analysis.mitre_techniques || []).map((t, i) => (
                         <span key={i} className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[10px] font-bold text-cyan-400 uppercase">
                           {t}
                         </span>
@@ -126,7 +131,7 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
                   {/* Remediation */}
                   <section className="bg-[#00D4FF]/5 p-6 rounded-2xl border border-[#00D4FF]/20 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-2 opacity-10">
-                       <CheckCircle size={80} />
+                      <CheckCircle size={80} />
                     </div>
                     <h4 className="text-xs font-bold text-[#00D4FF] uppercase tracking-widest mb-3">Recommended Remediation</h4>
                     <p className="text-slate-300 text-sm leading-relaxed relative z-10">
@@ -136,23 +141,24 @@ const ThreatNarrativeDrawer = ({ sessionId, isOpen, onClose }) => {
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-slate-600 text-sm italic">
-                  Failed to load analysis.
+                  Failed to load analysis. Please try again.
                 </div>
               )}
             </div>
-            
+
             <div className="p-6 bg-[#161b22] border-t border-white/10">
-               <button 
+              <button
                 onClick={onClose}
                 className="w-full py-3 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-xl transition-all border border-white/10"
-               >
-                 CLOSE INTELLIGENCE DRAWER
-               </button>
+              >
+                CLOSE INTELLIGENCE DRAWER
+              </button>
             </div>
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body  // BUG-10: Portal to body — avoids overflow/transform clipping
   );
 };
 

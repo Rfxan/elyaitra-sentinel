@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import StatCard from './StatCard';
 import LogsPanel from './LogsPanel';
 import ThreatTable from './ThreatTable';
-import { Activity, ShieldAlert, Wifi, Zap, Lock, Eye } from 'lucide-react';
+import { Activity, ShieldAlert, Zap, Lock } from 'lucide-react';
 import ThreatScoreCard from './ThreatScoreCard';
 import AccuracyDriftChart from './AccuracyDriftChart';
 import AttackChart from './AttackChart';
@@ -49,8 +49,23 @@ const Dashboard = ({ data }) => {
     return trafficFeed.length;
   }, [modelStats, trafficFeed]);
 
+  // BUG-9: Compute real deltas against previous snapshot
+  const prevStatsRef = useRef(null);
+  const [trends, setTrends] = useState({ threats: 0, blocked: 0, telemetry: 0 });
+
+  React.useEffect(() => {
+    const current = { threats: activeThreats, blocked: blockedCount, telemetry: requestsLogged };
+    if (prevStatsRef.current) {
+      setTrends({
+        threats: current.threats - prevStatsRef.current.threats,
+        blocked: current.blocked - prevStatsRef.current.blocked,
+        telemetry: current.telemetry - prevStatsRef.current.telemetry,
+      });
+    }
+    prevStatsRef.current = current;
+  }, [activeThreats, blockedCount, requestsLogged]);
+
   const tableThreats = useMemo(() => {
-    // Generate threats from blockedIPs or recent attack traffic
     const blocks = Object.entries(blockedIPs || {}).map(([ip, details]) => ({
       ip,
       type: details?.reason || 'Intrusion Attempt',
@@ -60,10 +75,9 @@ const Dashboard = ({ data }) => {
 
     if (blocks.length > 0) return blocks;
 
-    // Fallback if no blocks: show recent attacks from feed
     return (Array.isArray(trafficFeed) ? trafficFeed : [])
       .filter(t => t.type?.toLowerCase() === 'attack')
-      .slice(0, 5) // Last 5
+      .slice(0, 5)
       .map(t => ({
         ip: t.source_ip || t.ip,
         type: t.details || 'Detected Attack',
@@ -74,35 +88,31 @@ const Dashboard = ({ data }) => {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto pb-10">
-      {/* 4-COLUMN KPI GRID */}
+      {/* 4-COLUMN KPI GRID — BUG-9: Pass real trendDelta */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          title="Active Threats" 
-          value={activeThreats} 
-          icon={ShieldAlert} 
-          trend="up" 
-          trendValue="12"
+        <StatCard
+          title="Active Threats"
+          value={activeThreats}
+          icon={ShieldAlert}
+          trendDelta={trends.threats}
         />
-        <StatCard 
-          title="Blocked Actors" 
-          value={blockedCount} 
-          icon={Lock} 
-          trend="up" 
-          trendValue="5"
+        <StatCard
+          title="Blocked Actors"
+          value={blockedCount}
+          icon={Lock}
+          trendDelta={trends.blocked}
         />
-        <StatCard 
-          title="Total Telemetry" 
-          value={requestsLogged} 
-          icon={Activity} 
-          trend="down" 
-          trendValue="2"
+        <StatCard
+          title="Total Telemetry"
+          value={requestsLogged}
+          icon={Activity}
+          trendDelta={trends.telemetry}
         />
-        <StatCard 
-          title="System Health" 
-          value="99.4%" 
-          icon={Zap} 
-          trend="up" 
-          trendValue="0.1"
+        <StatCard
+          title="System Health"
+          value="99.4%"
+          icon={Zap}
+          trendDelta={0}
         />
       </div>
 
@@ -115,13 +125,13 @@ const Dashboard = ({ data }) => {
         <div className="lg:col-span-2 flex flex-col gap-6 min-w-0">
           {/* ATTACK TOPOLOGY GRAPH */}
           <div className="h-[500px]">
-             <AttackGraph />
+            <AttackGraph />
           </div>
 
           {/* DUAL WIDGET SECTION */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <ThreatMapWidget />
-             <SystemHealthWidget />
+            <ThreatMapWidget />
+            <SystemHealthWidget />
           </div>
 
           {/* ATTACK TRENDS CHART */}

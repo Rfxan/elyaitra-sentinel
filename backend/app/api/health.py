@@ -5,7 +5,9 @@ import os
 import requests
 import time
 from typing import Dict
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 from app.ai_engine.providers.factory import get_provider
+from app.core.state import START_TIME
 
 router = APIRouter()
 
@@ -17,8 +19,6 @@ def health_check():
 @router.get("/health/full")
 def health_check_full():
     """Comprehensive health check for system monitoring."""
-    from app.main import START_TIME
-    
     health_report = {
         "status": "operational",
         "uptime_seconds": int(time.time() - START_TIME),
@@ -54,17 +54,28 @@ def health_check_full():
         health_report["services"]["chromadb"] = {"status": "offline", "error": str(e)}
         health_report["status"] = "degraded"
 
-    # 3. LLM Check
+    # 3. LLM Check (real generation ping with 5s timeout)
     start = time.time()
     try:
         provider = get_provider()
-        # Max tokens 1 for a quick ping
-        # Note: We need to handle potential generation limits in testing
-        health_report["services"]["llm"] = {
-            "status": "online", 
+        llm_status = {
             "provider": os.getenv("LLM_PROVIDER", "gemini"),
-            "latency_ms": int((time.time() - start) * 1000)
         }
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            future = ex.submit(provider.generate, "ping")
+            try:
+                future.result(timeout=5)
+                llm_status["status"] = "online"
+            except FuturesTimeout:
+                llm_status["status"] = "degraded"
+                llm_status["error"] = "Generation timed out (>5s)"
+                health_report["status"] = "degraded"
+            except Exception as gen_err:
+                llm_status["status"] = "offline"
+                llm_status["error"] = str(gen_err)
+                health_report["status"] = "degraded"
+        llm_status["latency_ms"] = int((time.time() - start) * 1000)
+        health_report["services"]["llm"] = llm_status
     except Exception as e:
         health_report["services"]["llm"] = {"status": "offline", "error": str(e)}
         health_report["status"] = "degraded"

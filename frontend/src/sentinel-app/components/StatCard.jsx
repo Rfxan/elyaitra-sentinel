@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { GlassCard } from '@/components/ui/glass-card';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
-const StatCard = ({ title, value, icon: Icon, trend, trendValue }) => {
+// BUG-9: Updated StatCard to handle real delta trends with +/- prefix and neutral state
+const StatCard = ({ title, value, icon: Icon, trendDelta }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
-  // Animated number increment
   useEffect(() => {
     let start = 0;
     const end = parseInt(value, 10);
@@ -32,18 +32,23 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue }) => {
     return () => clearInterval(timer);
   }, [value]);
 
+  // Derive trend display from real delta
+  const isPositive = trendDelta > 0;
+  const isNegative = trendDelta < 0;
+  const isNeutral = trendDelta === 0 || trendDelta === undefined;
+
   return (
     <GlassCard className="p-5 flex flex-col justify-between group transition-all duration-300 hover:translate-y-[-4px]">
       <div className="flex items-start justify-between">
         <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-           <Icon size={20} />
+          <Icon size={20} />
         </div>
-        {trend && (
-           <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full 
-             ${trend === 'up' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-              {trend === 'up' ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-              {trendValue}%
-           </div>
+        {trendDelta !== undefined && (
+          <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full
+            ${isPositive ? 'bg-green-500/10 text-green-500' : isNegative ? 'bg-red-500/10 text-red-500' : 'bg-slate-500/10 text-slate-500'}`}>
+            {isPositive ? <TrendingUp size={10} /> : isNegative ? <TrendingDown size={10} /> : <Minus size={10} />}
+            {isNeutral ? '—' : `${isPositive ? '+' : ''}${trendDelta}`}
+          </div>
         )}
       </div>
 

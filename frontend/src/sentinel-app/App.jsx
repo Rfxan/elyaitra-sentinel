@@ -22,6 +22,8 @@ import AttackChart from './components/AttackChart';
 import AdversarialSimulator from './components/AdversarialSimulator';
 import IncidentDashboard from './components/IncidentDashboard';
 import ClusterAnalysis from './components/ClusterAnalysis';
+import AttackGraph from './components/AttackGraph'; // BUG-4: import for standalone route
+import { Toaster } from 'sonner';              // BUG-2: sonner toast provider
 import './sentinel.css';
 
 class ErrorBoundary extends React.Component {
@@ -33,7 +35,7 @@ class ErrorBoundary extends React.Component {
     return { hasError: true, error };
   }
   componentDidCatch(error, errorInfo) {
-    console.error("React Crash:", error, errorInfo);
+    console.error('React Crash:', error, errorInfo);
   }
   render() {
     if (this.state.hasError) {
@@ -72,45 +74,85 @@ function MainApp() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // BUG-12: Full keyboard shortcut map — suppressed when focus in input/textarea
   useEffect(() => {
+    const SHORTCUT_MAP = {
+      'd': 'Dashboards',
+      'f': 'Forensics',
+      'r': 'Red Team',
+      'i': 'Integrity',
+      't': 'Threat Feed',
+      'g': 'Attack Graph',
+    };
+
     const handleKeyDown = (e) => {
-      // Hotkey combo tracker (e.g. G then D)
-      if (e.key === 'g' || e.key === 'G') {
+      // Suppress shortcuts when typing in inputs
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || document.activeElement?.isContentEditable) return;
+
+      // Escape closes any open drawer (dispatched as custom event)
+      if (e.key === 'Escape') {
+        window.dispatchEvent(new CustomEvent('sentinel:close-drawer'));
+        return;
+      }
+
+      // G-prefix shortcuts (G then letter within 1 second)
+      if (e.key.toLowerCase() === 'g') {
         const nextKeyHandler = (ne) => {
-          if (ne.key === 'd' || ne.key === 'D') setActiveItem('Dashboards');
-          if (ne.key === 'f' || ne.key === 'F') setActiveItem('Forensics');
-          if (ne.key === 't' || ne.key === 'T') setActiveItem('Threat Feed');
+          const target = SHORTCUT_MAP[ne.key.toLowerCase()];
+          if (target) setActiveItem(target);
           window.removeEventListener('keydown', nextKeyHandler);
         };
         window.addEventListener('keydown', nextKeyHandler, { once: true });
         setTimeout(() => window.removeEventListener('keydown', nextKeyHandler), 1000);
+        return;
       }
-      
-      // Global Search shortcut Ctrl+K
+
+      // Ctrl+K → Threat Feed + focus search
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setActiveItem('Threat Feed');
-        // Small delay to allow component mount if needed
         setTimeout(() => {
           const searchInput = document.querySelector('input[placeholder*="Search IP"]');
           if (searchInput) searchInput.focus();
         }, 100);
       }
     };
-    
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // BUG-12: Auto-collapse sidebar on mobile resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) setIsCollapsed(true);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize(); // run on mount
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const globalDataStr = useAlerts();
 
   return (
     <div className="flex font-sans min-h-screen bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-[#c9d1d9]">
+      {/* BUG-2: Sonner toast provider at root */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: '#0d1117',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: '#c9d1d9',
+          },
+        }}
+      />
       <FlashOverlay />
       <ToastContainer />
-      <Sidebar 
-        activeItem={activeItem} 
-        setActiveItem={setActiveItem} 
+      <Sidebar
+        activeItem={activeItem}
+        setActiveItem={setActiveItem}
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
         isMobileOpen={isMobileOpen}
@@ -119,12 +161,12 @@ function MainApp() {
 
       {/* Main Content wrapper */}
       <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} flex flex-col relative min-h-screen min-w-0`}>
-        <Topbar 
-          isLive={globalDataStr.isLive} 
-          theme={theme} 
-          setTheme={setTheme} 
-          activeItem={activeItem} 
-          setActiveItem={setActiveItem} 
+        <Topbar
+          isLive={globalDataStr.isLive}
+          theme={theme}
+          setTheme={setTheme}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
           setIsMobileOpen={setIsMobileOpen}
         />
 
@@ -149,6 +191,11 @@ function MainApp() {
             <AlertHistory />
           ) : activeItem === 'Threat' ? (
             <ThreatView />
+          ) : activeItem === 'Attack Graph' ? (
+            // BUG-4: Add route for standalone Attack Graph view
+            <div className="w-full h-[80vh]">
+              <AttackGraph />
+            </div>
           ) : activeItem === 'Attack' ? (
             <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto h-full overflow-y-auto pb-10">
               <div className="h-[500px] shrink-0">

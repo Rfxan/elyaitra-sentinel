@@ -60,7 +60,21 @@ const ForensicsView = () => {
 
   const handleExportPdf = async () => {
     if (!selectedSession) return;
-    window.open(`${API_BASE}/export/pdf/${selectedSession}`, '_blank');
+    try {
+      const resp = await fetch(`${API_BASE}/export/pdf/${selectedSession}`, { method: 'GET' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sentinel_incident_${selectedSession}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('PDF export failed:', err);
+    }
   };
 
   // Group events by session_id, assigning a fallback for null sessions
